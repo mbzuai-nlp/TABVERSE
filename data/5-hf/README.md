@@ -30,7 +30,7 @@ configs:
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://huggingface.co/datasets/MBZUAI/TABVERSE/resolve/main/raw/assets/logo-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://huggingface.co/datasets/MBZUAI/TABVERSE/resolve/main/raw/assets/logo-dark.png">
     <img src="https://huggingface.co/datasets/MBZUAI/TABVERSE/resolve/main/raw/assets/logo-light.png" alt="TABVERSE" width="280">
   </picture>
 </p>
