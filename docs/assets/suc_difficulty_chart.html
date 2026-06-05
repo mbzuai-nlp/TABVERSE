@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: transparent; padding: 16px 20px 10px; }
+  .title  { font-size: 14px; font-weight: 800; color: #1e293b; text-align: center; margin-bottom: 3px; }
+  .subtitle { font-size: 11px; color: #64748b; text-align: center; margin-bottom: 16px; }
+  .bar-row { display: flex; align-items: center; margin-bottom: 8px; }
+  .label   { font-size: 12px; color: #374151; font-weight: 600; width: 70px; flex-shrink: 0; text-align: right; padding-right: 10px; }
+  .bar-wrap { flex: 1; background: #f1f5f9; border-radius: 4px; height: 26px; position: relative; overflow: visible; }
+  .bar     { height: 26px; border-radius: 4px; display: flex; align-items: center; }
+  .val     { font-size: 11.5px; font-weight: 700; color: #1e293b; margin-left: 6px; white-space: nowrap; }
+  .legend  { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; font-size: 10.5px; color: #6b7280; }
+  .leg { display: flex; align-items: center; gap: 5px; }
+  .swatch { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+  .axis-ticks { display: flex; justify-content: space-between; padding-left: 80px; font-size: 10px; color: #94a3b8; margin-top: 4px; }
+  .axis-label { text-align: center; font-size: 10.5px; color: #94a3b8; margin-top: 2px; padding-left: 80px; }
+</style>
+</head>
+<body>
+<div class="title">SUC Task Difficulty</div>
+<div class="subtitle">Global mean exact-match accuracy — all pipelines · models · formats</div>
+
+<div class="legend">
+  <div class="leg"><div class="swatch" style="background:#16a34a;"></div> Easy (≥50%)</div>
+  <div class="leg"><div class="swatch" style="background:#84cc16;"></div> Moderate (30–50%)</div>
+  <div class="leg"><div class="swatch" style="background:#f59e0b;"></div> Hard (15–30%)</div>
+  <div class="leg"><div class="swatch" style="background:#ef4444;"></div> Very Hard (&lt;15%)</div>
+</div>
+
+<div id="chart"></div>
+
+<div class="axis-ticks">
+  <span>0</span><span>20</span><span>40</span><span>60</span><span>80</span><span>100</span>
+</div>
+<div class="axis-label">Mean Accuracy (%)</div>
+
+<script>
+const tasks = [
+  { label: "#Cols",   val: 62.8, full: "# Columns" },
+  { label: "Co.Rt.",  val: 61.3, full: "Column Retrieval" },
+  { label: "L.C.",    val: 54.4, full: "Last Cell" },
+  { label: "F.C.",    val: 48.7, full: "First Cell" },
+  { label: "#Rows",   val: 40.2, full: "# Rows" },
+  { label: "S.D.",    val: 22.9, full: "Size Detection" },
+  { label: "R.Lu.",   val: 20.2, full: "Reverse Lookup" },
+  { label: "T.P.",    val: 18.1, full: "Table Partition" },
+  { label: "C.Lu.",   val: 9.9,  full: "Cell Lookup" },
+  { label: "Ro.Rt.",  val: 5.0,  full: "Row Retrieval" },
+];
+
+function getColor(v) {
+  if (v >= 50) return '#16a34a';
+  if (v >= 30) return '#84cc16';
+  if (v >= 15) return '#f59e0b';
+  return '#ef4444';
+}
+
+const chart = document.getElementById('chart');
+tasks.forEach(t => {
+  const row = document.createElement('div');
+  row.className = 'bar-row';
+  row.title = t.full + ': ' + t.val + '%';
+
+  const lbl = document.createElement('div');
+  lbl.className = 'label';
+  lbl.textContent = t.label;
+
+  const wrap = document.createElement('div');
+  wrap.className = 'bar-wrap';
+
+  const bar = document.createElement('div');
+  bar.className = 'bar';
+  bar.style.width = t.val + '%';
+  bar.style.background = getColor(t.val);
+
+  const val = document.createElement('span');
+  val.className = 'val';
+  val.textContent = t.val;
+  bar.appendChild(val);
+  wrap.appendChild(bar);
+
+  row.appendChild(lbl);
+  row.appendChild(wrap);
+  chart.appendChild(row);
+});
+</script>
+</body>
+</html>

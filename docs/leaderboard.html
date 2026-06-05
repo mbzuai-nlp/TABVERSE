@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TABVERSE Leaderboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background: radial-gradient(1200px 600px at 50% -10%, #ffffff 0%, #f8fafc 55%, #eef2f7 100%); }
+    .section { max-width: 80rem; margin: 0 auto; padding-left: 1.25rem; padding-right: 1.25rem; }
+    .btn { display: inline-flex; align-items: center; gap: .5rem; padding: .5rem .9rem; border-radius: 1rem; border: 1px solid #e5e7eb; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.04); font-size: .9rem; text-decoration: none; color: #1f2937; cursor: pointer; }
+    .btn:hover { box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+    sup { font-size: .65em; vertical-align: super; }
+
+    /* Tab bar */
+    .tab-bar { display: flex; gap: 4px; background: rgba(255,255,255,.6); backdrop-filter: blur(10px); border: 1px solid #e5e7eb; border-radius: 1rem; padding: 4px; }
+    .tab { padding: .45rem 1.1rem; border-radius: .75rem; font-size: .88rem; font-weight: 600; cursor: pointer; transition: all .15s; color: #6b7280; border: none; background: transparent; }
+    .tab.active { background: #1d4ed8; color: #fff; box-shadow: 0 1px 4px rgba(29,78,216,.3); }
+    .tab:not(.active):hover { background: #f1f5f9; color: #374151; }
+
+    /* Filter row */
+    .filter-btn { padding: .3rem .75rem; border-radius: .6rem; font-size: .8rem; font-weight: 600; cursor: pointer; border: 1.5px solid #e5e7eb; background: #fff; color: #6b7280; transition: all .12s; }
+    .filter-btn.active { border-color: #3b82f6; background: #eff6ff; color: #1d4ed8; }
+    .filter-btn:hover:not(.active) { border-color: #94a3b8; color: #374151; }
+
+    /* Tables */
+    table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    th { font-size: .72rem; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: .05em; padding: 8px 6px; background: rgba(248,250,252,.8); position: sticky; top: 0; z-index: 1; }
+    th.sortable { cursor: pointer; user-select: none; white-space: nowrap; }
+    th.sortable:hover { color: #1d4ed8; }
+    th .sort-icon { display: inline-block; margin-left: 3px; opacity: .4; font-size: .7rem; }
+    th.asc .sort-icon::after { content: '▲'; opacity: 1; }
+    th.desc .sort-icon::after { content: '▼'; opacity: 1; }
+    th:not(.asc):not(.desc) .sort-icon::after { content: '⇅'; }
+
+    td { padding: 7px 6px; font-size: .82rem; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+    tr:hover td { background: rgba(239,246,255,.5); }
+    tr:last-child td { border-bottom: none; }
+
+    .model-name { font-weight: 600; color: #1e293b; white-space: nowrap; }
+    .param-badge { display: inline-block; font-size: .68rem; font-weight: 600; padding: 1px 6px; border-radius: .4rem; background: #f1f5f9; color: #64748b; margin-left: 4px; }
+    .type-badge { display: inline-block; font-size: .68rem; font-weight: 700; padding: 1px 6px; border-radius: .4rem; }
+    .type-prop { background: #fef3c7; color: #92400e; }
+    .type-vlm  { background: #ede9fe; color: #6d28d9; }
+    .type-llm  { background: #dcfce7; color: #166534; }
+    .type-spec { background: #fce7f3; color: #9d174d; }
+
+    .num { text-align: center; font-variant-numeric: tabular-nums; font-size: .82rem; }
+    .na  { text-align: center; color: #d1d5db; font-size: .75rem; }
+
+    /* Heat-cell coloring (applied via JS) */
+    .heat { border-radius: 4px; padding: 2px 4px; }
+
+    /* Section card */
+    .card { background: rgba(255,255,255,.6); backdrop-filter: blur(10px); border: 1px solid rgba(229,231,235,.8); border-radius: 1.25rem; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Pipeline sub-filter for SUC */
+    .pipe-selector { display: flex; gap: 4px; }
+    .pipe-btn { padding: .25rem .65rem; border-radius: .5rem; font-size: .78rem; font-weight: 600; cursor: pointer; border: 1.5px solid #e5e7eb; background: #fff; color: #6b7280; transition: all .12s; }
+    .pipe-btn.active { border-color: #3b82f6; background: #eff6ff; color: #1d4ed8; }
+
+    .scroll-x { overflow-x: auto; }
+
+    /* Legend */
+    .heat-legend { display: flex; align-items: center; gap: 6px; font-size: .72rem; color: #6b7280; }
+    .heat-swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+  </style>
+</head>
+<body class="text-gray-800 selection:bg-blue-200/40">
+
+<!-- ══ HEADER ══ -->
+<header class="section pt-10 pb-6 text-center">
+  <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight">TABVERSE Leaderboard</h1>
+  <p class="mt-2 text-sm text-gray-500 uppercase tracking-wide font-medium">
+    QA &nbsp;·&nbsp; SUC &nbsp;·&nbsp; SR &nbsp;·&nbsp; 17 Models &nbsp;·&nbsp; 3 Formats &nbsp;·&nbsp; 3 Pipelines
+  </p>
+  <div class="mt-4 flex flex-wrap justify-center gap-3">
+    <a class="btn" href="./index.html">← Back to Paper Page</a>
+    <a class="btn" href="./assets/dataset.pdf" target="_blank" rel="noopener">
+      <img src="./assets/adobe.svg" alt="PDF" class="w-4 h-4" /> Paper
+    </a>
+  </div>
+</header>
+
+<!-- ══ MAIN ══ -->
+<div class="section pb-16">
+
+  <!-- Tab bar -->
+  <div class="mb-6 flex flex-wrap items-center gap-4">
+    <div class="tab-bar">
+      <button class="tab active" data-tab="qa">Question Answering (QA)</button>
+      <button class="tab" data-tab="suc">Structural Understanding (SUC)</button>
+      <button class="tab" data-tab="sr">Structure Reconstruction (SR)</button>
+    </div>
+  </div>
+
+  <!-- ══════════ QA TAB ══════════ -->
+  <div class="tab-panel active" id="tab-qa">
+    <div class="mb-4 flex flex-wrap items-center gap-3">
+      <span class="text-sm font-semibold text-gray-600">Filter:</span>
+      <button class="filter-btn active" data-filter="qa" data-val="all">All Models</button>
+      <button class="filter-btn" data-filter="qa" data-val="proprietary">Proprietary</button>
+      <button class="filter-btn" data-filter="qa" data-val="vlm">Open VLMs</button>
+      <button class="filter-btn" data-filter="qa" data-val="llm">LLMs</button>
+      <button class="filter-btn" data-filter="qa" data-val="spec">Specialized</button>
+      <div class="ml-auto flex items-center gap-3 heat-legend">
+        <div class="heat-swatch" style="background:#16a34a;"></div>High
+        <div class="heat-swatch" style="background:#84cc16;"></div>Mid
+        <div class="heat-swatch" style="background:#f59e0b;"></div>Low
+        <div class="heat-swatch" style="background:#ef4444;"></div>Very Low
+      </div>
+    </div>
+    <p class="text-xs text-gray-500 mb-3">Strict exact-match accuracy (%). Click any column header to sort. VLM-Image columns show image pipeline; Text columns show VLM-Text / LLM-Text pipeline.</p>
+    <div class="card scroll-x">
+      <table id="qa-table">
+        <thead>
+          <tr>
+            <th style="text-align:left;min-width:180px;" class="sortable" data-col="model">Model <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="img_avg">Img Avg <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="img_html">Img HTML <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="img_latex">Img LaTeX <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="img_md">Img Md <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="txt_avg">Text Avg <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="txt_html">Text HTML <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="txt_latex">Text LaTeX <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="txt_md">Text Md <span class="sort-icon"></span></th>
+          </tr>
+        </thead>
+        <tbody id="qa-tbody"></tbody>
+      </table>
+    </div>
+    <p class="text-xs text-gray-400 mt-2">Table 3 from TABVERSE paper. Bold = best per column. * = limited context window; scores over available instances.</p>
+  </div>
+
+  <!-- ══════════ SUC TAB ══════════ -->
+  <div class="tab-panel" id="tab-suc">
+    <div class="mb-4 flex flex-wrap items-center gap-3">
+      <span class="text-sm font-semibold text-gray-600">Pipeline:</span>
+      <div class="pipe-selector">
+        <button class="pipe-btn active" data-pipe="vlm-img">VLM-Image</button>
+        <button class="pipe-btn" data-pipe="vlm-txt">VLM-Text</button>
+        <button class="pipe-btn" data-pipe="llm-txt">LLM-Text</button>
+      </div>
+      <span class="text-sm font-semibold text-gray-600 ml-2">Format:</span>
+      <div class="pipe-selector">
+        <button class="pipe-btn active" data-fmt="html">HTML</button>
+        <button class="pipe-btn" data-fmt="latex">LaTeX</button>
+        <button class="pipe-btn" data-fmt="md">Markdown</button>
+      </div>
+    </div>
+    <p class="text-xs text-gray-500 mb-3">Exact-match accuracy (%) on 10 structure-oriented subtasks. T.P.=Table Partition, F.C.=First Cell, L.C.=Last Cell, S.D.=Size Detection, C.Lu.=Cell Lookup, R.Lu.=Reverse Lookup, Co.Rt.=Column Retrieval, Ro.Rt.=Row Retrieval.</p>
+    <div class="card scroll-x">
+      <table id="suc-table">
+        <thead>
+          <tr>
+            <th style="text-align:left;min-width:170px;" class="sortable" data-col="model">Model <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="overall">Overall <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="tp">T.P. <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="fc">F.C. <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="lc">L.C. <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="sd">S.D. <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="rows">#Rows <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="cols">#Cols <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="clu">C.Lu. <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="rlu">R.Lu. <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="cort">Co.Rt. <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="rort">Ro.Rt. <span class="sort-icon"></span></th>
+          </tr>
+        </thead>
+        <tbody id="suc-tbody"></tbody>
+      </table>
+    </div>
+    <p class="text-xs text-gray-400 mt-2">Tables 4, 12, 17 from TABVERSE paper. Select pipeline and format above.</p>
+  </div>
+
+  <!-- ══════════ SR TAB ══════════ -->
+  <div class="tab-panel" id="tab-sr">
+    <div class="mb-4 flex flex-wrap items-center gap-3">
+      <span class="text-sm font-semibold text-gray-600">Source format:</span>
+      <div class="pipe-selector">
+        <button class="pipe-btn active" data-src="html">HTML image</button>
+        <button class="pipe-btn" data-src="md">Markdown image</button>
+        <button class="pipe-btn" data-src="latex">LaTeX image</button>
+      </div>
+      <div class="ml-auto flex items-center gap-3 heat-legend">
+        <div class="heat-swatch" style="background:#16a34a;"></div>≥0.95
+        <div class="heat-swatch" style="background:#84cc16;"></div>0.85–0.95
+        <div class="heat-swatch" style="background:#f59e0b;"></div>0.70–0.85
+        <div class="heat-swatch" style="background:#ef4444;"></div>&lt;0.70
+      </div>
+    </div>
+    <p class="text-xs text-gray-500 mb-3">GriTS-Topology (structural fidelity) and GriTS-Content (cell-text fidelity) for three target formats, plus syntactic usability fraction. Higher = better.</p>
+    <div class="card scroll-x">
+      <table id="sr-table">
+        <thead>
+          <tr>
+            <th style="text-align:left;min-width:180px;" class="sortable" data-col="model">Model <span class="sort-icon"></span></th>
+            <th colspan="3" style="text-align:center;background:#fef3c7;color:#78350f;border-bottom:2px solid #fbbf24;">→ HTML target</th>
+            <th colspan="3" style="text-align:center;background:#d1fae5;color:#065f46;border-bottom:2px solid #34d399;">→ Markdown target</th>
+            <th colspan="3" style="text-align:center;background:#fce7f3;color:#831843;border-bottom:2px solid #f472b6;">→ LaTeX target</th>
+          </tr>
+          <tr>
+            <th></th>
+            <th class="sortable" data-col="html_top" style="background:#fffbeb;">Topology <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="html_con" style="background:#fffbeb;">Content <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="html_use" style="background:#fffbeb;">Usability <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="md_top" style="background:#f0fdf4;">Topology <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="md_con" style="background:#f0fdf4;">Content <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="md_use" style="background:#f0fdf4;">Usability <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="tex_top" style="background:#fdf4ff;">Topology <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="tex_con" style="background:#fdf4ff;">Content <span class="sort-icon"></span></th>
+            <th class="sortable" data-col="tex_use" style="background:#fdf4ff;">Usability <span class="sort-icon"></span></th>
+          </tr>
+        </thead>
+        <tbody id="sr-tbody"></tbody>
+      </table>
+    </div>
+    <p class="text-xs text-gray-400 mt-2">Tables 7 &amp; 8 from TABVERSE paper. GriTS scores in [0,1]; usability = fraction of syntactically valid outputs.</p>
+  </div>
+
+</div>
+
+<footer class="section py-8 text-center text-sm text-gray-500">
+  <div class="flex items-center justify-center gap-4 flex-wrap">
+    <a class="underline" href="./index.html">Paper Page</a>
+    <a class="underline" href="./assets/dataset.pdf" target="_blank">Paper PDF</a>
+    <a class="underline" href="http://anonymous.for.review" target="_blank">GitHub</a>
+  </div>
+  <p class="mt-3">&copy; <span id="year"></span> The Authors — MBZUAI &amp; SUTD.</p>
+</footer>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// DATA
+// ─────────────────────────────────────────────────────────────
+
+const QA = [
+  { model:"Gemini-3-Flash-Preview", params:"–",   type:"proprietary",
+    img:[65.43,65.14,65.43], txt:[65.71,65.00,65.43] },
+  { model:"GPT-5.2",                params:"–",   type:"proprietary",
+    img:[54.57,54.52,56.14], txt:[57.43,57.29,58.00] },
+  { model:"Qwen3-VL-8B",            params:"8B",  type:"vlm",
+    img:[50.29,49.29,49.71], txt:[53.43,52.14,53.29] },
+  { model:"InternVL3.5-30B-A3B",    params:"30B", type:"vlm",
+    img:[47.86,50.00,48.29], txt:[45.86,45.71,47.00] },
+  { model:"InternVL3.5-14B",        params:"14B", type:"vlm",
+    img:[48.57,48.14,48.00], txt:[47.14,47.29,44.86] },
+  { model:"Gemma-3-27B",            params:"27B", type:"vlm",
+    img:[46.14,45.29,45.43], txt:[53.43,51.29,53.14] },
+  { model:"Ministral-3-14B",        params:"14B", type:"vlm",
+    img:[44.43,39.14,42.71], txt:[40.00,35.43,36.57] },
+  { model:"Qwen3-VL-30B-A3B",       params:"30B", type:"vlm",
+    img:[41.14,42.14,41.43], txt:[45.29,43.57,39.71] },
+  { model:"Gemma-3-12B",            params:"12B", type:"vlm",
+    img:[38.86,39.57,38.57], txt:[50.29,49.00,48.57] },
+  { model:"LLaVA-1.6-7B*",          params:"7B",  type:"vlm",
+    img:[31.86,31.43,32.00], txt:[27.37,29.55,26.50] },
+  { model:"SmolVLM2-2.2B",          params:"2.2B",type:"vlm",
+    img:[29.71,28.71,25.86], txt:[21.57,17.63,15.75] },
+  { model:"LLaVA-1.6-13B*",         params:"13B", type:"vlm",
+    img:[25.14,23.71,25.00], txt:[23.91,22.13,24.89] },
+  { model:"TableLLaVA-v1.5-7B*",    params:"7B",  type:"spec",
+    img:[1.29,1.00,4.00],    txt:[23.61,27.37,28.40] },
+  { model:"Qwen3-30B-A3B",          params:"30B", type:"llm",
+    img:null,                txt:[51.14,48.43,46.57] },
+  { model:"Qwen2.5-7B",             params:"7B",  type:"llm",
+    img:null,                txt:[44.57,42.71,45.43] },
+  { model:"TableGPT2-7B",           params:"7B",  type:"spec",
+    img:null,                txt:[44.43,41.57,42.14] },
+  { model:"TAMA-QWen3",             params:"–",   type:"spec",
+    img:null,                txt:[18.29,19.14,20.71] },
+];
+
+// SUC data keyed by pipeline+format
+// Structure: { model, type, data: { "vlm-img": {html,latex,md}, "vlm-txt": {...}, "llm-txt": {...} } }
+// Each format has: [tp,fc,lc,sd,rows,cols,clu,rlu,cort,rort]
+const SUC = [
+  { model:"GPT-5.2",          type:"proprietary", data:{
+    "vlm-img":{ html:[93.0,97.1,94.9,32.9,78.4,98.1,2.7,15.7,95.2,1.7],
+                latex:[85.4,93.3,88.1,57.7,85.7,96.5,3.5,19.2,93.5,2.5],
+                md:   [87.4,93.6,91.6,80.3,91.3,98.9,3.0,20.8,96.0,5.1] },
+    "vlm-txt":{ html:[94.9,99.4,95.5,98.4,97.3,100.0,53.3,86.0,94.8,84.4],
+                latex:[90.5,98.4,92.5,29.3,84.4,100.0,7.0,17.2,97.6,3.5],
+                md:   [88.6,94.9,93.3,87.3,96.0,99.8,14.8,34.8,96.2,25.1] },
+    "llm-txt":null
+  }},
+  { model:"Gemini-3-Flash",   type:"proprietary", data:{
+    "vlm-img":{ html:[91.7,97.0,88.7,0.2,0.5,94.9,0.6,14.8,94.4,0.3],
+                latex:[86.1,94.8,87.4,0.0,6.5,99.2,1.6,15.1,95.7,0.8],
+                md:   [87.9,94.8,87.7,0.2,1.9,99.7,1.3,14.9,97.3,0.3] },
+    "vlm-txt":{ html:[92.7,97.3,90.0,86.5,97.8,100.0,16.9,79.0,97.3,59.9],
+                latex:[90.6,97.1,89.3,8.9,89.8,100.0,0.6,19.4,97.5,5.9],
+                md:   [88.9,95.7,89.0,75.8,95.1,100.0,15.9,67.1,97.5,49.8] },
+    "llm-txt":null
+  }},
+  { model:"Qwen3-VL-30B-A3B", type:"vlm", data:{
+    "vlm-img":{ html:[50.2,92.5,85.2,32.9,44.2,91.9,21.1,24.3,71.1,0.2],
+                latex:[45.6,92.7,82.2,34.2,40.2,87.4,22.3,27.3,83.8,4.0],
+                md:   [40.1,87.9,78.7,32.0,41.7,87.4,21.6,25.1,88.9,1.1] },
+    "vlm-txt":{ html:[49.9,94.6,76.8,68.5,73.4,96.7,40.5,37.5,89.7,14.3],
+                latex:[29.4,95.5,69.6,46.9,64.5,97.5,29.7,19.7,83.0,8.6],
+                md:   [26.4,87.8,64.9,62.3,84.6,71.7,29.6,20.8,72.2,5.9] },
+    "llm-txt":null
+  }},
+  { model:"InternVL3.5-14B",  type:"vlm", data:{
+    "vlm-img":{ html:[35.3,86.8,68.4,22.3,55.3,89.8,15.6,15.9,84.6,4.1],
+                latex:[38.0,88.6,71.9,16.4,28.6,83.1,18.9,22.7,90.1,6.4],
+                md:   [31.6,83.0,65.3,32.3,51.0,86.6,20.3,23.5,88.9,5.4] },
+    "vlm-txt":{ html:[8.4,95.5,78.7,8.4,50.6,98.4,50.9,44.2,95.2,8.6],
+                latex:[11.1,94.1,76.0,11.0,44.2,99.4,36.9,22.3,87.1,6.8],
+                md:   [1.4,76.3,71.4,14.5,65.7,85.9,43.6,33.2,83.9,3.3] },
+    "llm-txt":null
+  }},
+  { model:"Qwen3-VL-8B",      type:"vlm", data:{
+    "vlm-img":{ html:[23.8,93.3,80.9,8.1,25.6,89.3,27.0,26.6,90.1,1.0],
+                latex:[20.8,93.2,78.9,14.3,36.1,88.7,32.4,30.0,89.5,3.0],
+                md:   [24.6,87.8,78.4,14.6,31.8,90.1,28.0,34.2,89.8,2.2] },
+    "vlm-txt":{ html:[26.9,93.5,80.0,27.8,69.0,98.3,45.3,47.9,84.9,3.2],
+                latex:[18.6,92.1,76.3,15.7,36.2,100.0,30.2,17.5,74.1,5.6],
+                md:   [10.7,68.5,64.5,30.2,66.9,92.8,28.1,18.8,69.0,8.3] },
+    "llm-txt":null
+  }},
+  { model:"Gemma-3-27B",      type:"vlm", data:{
+    "vlm-img":{ html:[29.6,63.9,52.3,21.0,39.9,50.1,22.6,32.6,70.9,10.5],
+                latex:[28.3,59.6,52.0,23.5,39.7,50.2,22.7,32.6,70.3,9.1],
+                md:   [30.2,59.0,51.5,27.3,44.4,55.8,24.2,33.7,74.2,11.3] },
+    "vlm-txt":{ html:[53.7,82.5,82.2,72.2,73.8,98.1,45.0,55.6,94.9,16.2],
+                latex:[33.2,62.6,76.2,60.4,60.1,99.5,42.0,32.3,89.0,13.2],
+                md:   [20.0,45.3,70.6,59.5,83.3,76.5,40.5,38.5,91.6,11.6] },
+    "llm-txt":null
+  }},
+  { model:"Gemma-3-12B",      type:"vlm", data:{
+    "vlm-img":{ html:[10.3,37.5,45.8,13.7,30.0,35.0,10.3,14.5,56.3,2.9],
+                latex:[13.8,41.2,48.2,13.5,30.2,37.2,11.0,15.1,62.8,3.0],
+                md:   [10.7,40.1,46.7,18.1,32.8,42.0,14.1,15.4,66.8,2.4] },
+    "vlm-txt":{ html:[18.9,68.5,81.4,64.9,77.9,90.1,31.3,28.9,85.1,5.6],
+                latex:[14.5,53.1,76.5,30.5,35.6,98.7,19.1,18.4,76.9,3.7],
+                md:   [4.3,31.6,67.4,51.4,73.3,67.2,19.4,20.7,76.3,2.5] },
+    "llm-txt":null
+  }},
+  { model:"Ministral-3-14B",  type:"vlm", data:{
+    "vlm-img":{ html:[36.1,40.5,61.5,22.7,35.1,46.4,26.6,39.6,79.7,10.7],
+                latex:[36.1,41.8,53.3,38.2,35.6,36.1,26.9,39.4,72.7,11.1],
+                md:   [30.7,34.3,49.4,38.5,35.6,52.5,26.6,38.8,74.2,10.7] },
+    "vlm-txt":{ html:[20.0,95.5,57.2,22.4,51.2,99.0,41.2,37.7,88.4,22.7],
+                latex:[14.1,79.0,62.3,30.2,40.5,99.4,19.2,17.0,68.5,12.2],
+                md:   [1.7,69.0,49.4,6.5,44.7,80.0,23.8,21.3,62.0,11.1] },
+    "llm-txt":null
+  }},
+  { model:"LLaVA-1.6-13B*",   type:"vlm", data:{
+    "vlm-img":{ html:[0.2,31.5,27.5,4.5,19.4,28.0,1.4,6.4,37.5,0.0],
+                latex:[0.2,32.9,29.6,3.8,20.0,20.5,2.2,5.6,36.7,0.2],
+                md:   [0.5,35.6,31.6,4.3,19.1,22.6,2.1,6.2,36.6,0.0] },
+    "vlm-txt":{ html:[0.0,21.5,5.2,1.0,12.3,31.2,2.5,0.7,16.0,0.2],
+                latex:[0.0,24.7,7.6,0.3,1.0,1.6,2.3,2.4,19.4,0.2],
+                md:   [0.0,12.5,4.9,0.0,8.1,5.5,1.6,1.3,12.5,0.0] },
+    "llm-txt":null
+  }},
+  { model:"Qwen3-30B-A3B",    type:"llm", data:{
+    "vlm-img":null,
+    "vlm-txt":null,
+    "llm-txt":{ html:[45.0,94.8,68.0,72.2,81.1,89.8,44.7,25.0,82.2,4.8],
+                latex:[25.6,91.3,60.9,45.5,51.2,85.4,28.3,9.4,66.9,2.2],
+                md:   [23.4,83.5,56.0,57.6,75.5,44.4,28.9,9.2,63.4,1.4] }
+  }},
+  { model:"Qwen2.5-7B",       type:"llm", data:{
+    "vlm-img":null, "vlm-txt":null,
+    "llm-txt":{ html:[16.7,95.1,57.7,20.5,52.3,80.0,25.4,14.3,75.4,5.7],
+                latex:[11.1,44.4,54.8,3.3,34.3,99.0,7.3,5.2,61.4,5.4],
+                md:   [5.9,55.6,53.7,15.1,62.5,43.7,8.1,9.2,52.6,2.7] }
+  }},
+  { model:"TableGPT2-7B",     type:"spec", data:{
+    "vlm-img":null, "vlm-txt":null,
+    "llm-txt":{ html:[20.8,94.1,68.4,31.0,49.0,78.7,13.5,12.9,66.8,3.2],
+                latex:[18.1,89.7,69.0,16.7,38.8,98.7,6.2,7.2,57.4,4.1],
+                md:   [4.9,67.2,58.0,39.0,66.1,38.0,6.7,9.2,49.0,1.0] }
+  }},
+  { model:"TAMA-QWen3",       type:"spec", data:{
+    "vlm-img":null, "vlm-txt":null,
+    "llm-txt":{ html:[7.2,48.5,4.9,6.8,15.1,44.2,6.4,9.4,86.0,0.6],
+                latex:[12.1,35.1,15.9,0.0,0.0,51.0,2.1,2.1,59.3,0.2],
+                md:   [4.6,38.0,6.0,0.0,3.2,54.2,1.7,3.5,83.6,0.3] }
+  }},
+];
+
+// SR data: [topo_html, topo_md, topo_tex, con_html, con_md, con_tex, use_html, use_md, use_tex]
+// keyed by source format: html / md / latex
+const SR = [
+  { model:"GPT-5.2",         type:"proprietary",
+    html: { top:[0.98,0.98,0.81], con:[0.97,0.94,0.78], use:[0.99,1.00,0.94] },
+    md:   { top:[0.98,0.99,0.95], con:[0.96,0.97,0.91], use:[0.99,1.00,0.96] },
+    latex:{ top:[0.98,0.97,0.93], con:[0.94,0.94,0.89], use:[1.00,1.00,0.98] }
+  },
+  { model:"Gemini-3-Flash",  type:"proprietary",
+    html: { top:[0.05,0.96,0.65], con:[0.05,0.94,0.64], use:[0.06,0.99,0.76] },
+    md:   { top:[0.86,0.97,0.51], con:[0.85,0.96,0.51], use:[0.91,1.00,0.80] },
+    latex:{ top:[0.65,0.93,0.58], con:[0.63,0.91,0.57], use:[0.72,0.99,0.75] }
+  },
+  { model:"Qwen3-VL-8B",     type:"vlm",
+    html: { top:[0.99,1.00,0.95], con:[0.98,0.98,0.92], use:[1.00,1.00,0.88] },
+    md:   { top:[0.99,1.00,0.97], con:[0.97,0.98,0.93], use:[1.00,1.00,0.87] },
+    latex:{ top:[0.98,0.98,0.97], con:[0.95,0.95,0.95], use:[1.00,1.00,0.95] }
+  },
+  { model:"Qwen3-VL-30B-A3B",type:"vlm",
+    html: { top:[0.98,0.99,0.84], con:[0.98,0.98,0.80], use:[1.00,1.00,0.77] },
+    md:   { top:[0.99,1.00,0.97], con:[0.97,0.98,0.93], use:[1.00,1.00,0.89] },
+    latex:{ top:[0.97,0.98,0.96], con:[0.95,0.95,0.95], use:[1.00,1.00,0.95] }
+  },
+  { model:"InternVL3.5-14B", type:"vlm",
+    html: { top:[0.99,0.99,0.96], con:[0.95,0.94,0.92], use:[1.00,1.00,0.91] },
+    md:   { top:[0.99,0.98,0.96], con:[0.93,0.93,0.91], use:[1.00,0.99,0.89] },
+    latex:{ top:[0.96,0.97,0.95], con:[0.93,0.91,0.93], use:[1.00,0.99,0.91] }
+  },
+  { model:"InternVL3.5-30B", type:"vlm",
+    html: { top:[0.98,0.99,0.95], con:[0.95,0.94,0.92], use:[1.00,1.00,0.89] },
+    md:   { top:[0.99,0.99,0.96], con:[0.93,0.94,0.92], use:[1.00,1.00,0.88] },
+    latex:{ top:[0.96,0.97,0.95], con:[0.93,0.92,0.92], use:[1.00,1.00,0.89] }
+  },
+  { model:"Gemma-3-27B",     type:"vlm",
+    html: { top:[0.97,0.97,0.94], con:[0.86,0.85,0.82], use:[1.00,1.00,0.89] },
+    md:   { top:[0.98,0.97,0.94], con:[0.85,0.85,0.81], use:[1.00,1.00,0.88] },
+    latex:{ top:[0.97,0.96,0.94], con:[0.83,0.82,0.81], use:[1.00,1.00,0.87] }
+  },
+  { model:"Gemma-3-12B",     type:"vlm",
+    html: { top:[0.94,0.95,0.91], con:[0.79,0.79,0.76], use:[1.00,0.99,0.81] },
+    md:   { top:[0.95,0.96,0.92], con:[0.80,0.81,0.77], use:[1.00,1.00,0.81] },
+    latex:{ top:[0.94,0.95,0.90], con:[0.78,0.77,0.75], use:[1.00,0.99,0.80] }
+  },
+  { model:"Ministral-3-14B", type:"vlm",
+    html: { top:[0.98,0.95,0.95], con:[0.94,0.90,0.92], use:[1.00,0.97,0.84] },
+    md:   { top:[0.98,0.95,0.95], con:[0.92,0.90,0.90], use:[1.00,0.97,0.84] },
+    latex:{ top:[0.95,0.93,0.93], con:[0.87,0.86,0.88], use:[1.00,0.98,0.88] }
+  },
+  { model:"SmolVLM2-2.2B",   type:"vlm",
+    html: { top:[0.87,0.86,0.81], con:[0.74,0.74,0.69], use:[0.97,0.90,0.35] },
+    md:   { top:[0.66,0.79,0.78], con:[0.57,0.68,0.68], use:[0.75,0.81,0.37] },
+    latex:{ top:[0.79,0.85,0.57], con:[0.65,0.69,0.47], use:[0.92,0.92,0.60] }
+  },
+  { model:"LLaVA-1.6-13B*",  type:"vlm",
+    html: { top:[0.66,0.81,0.23], con:[0.46,0.51,0.15], use:[0.99,0.90,0.00] },
+    md:   { top:[0.62,0.75,0.22], con:[0.45,0.51,0.15], use:[0.93,0.84,0.00] },
+    latex:{ top:[0.65,0.76,0.27], con:[0.46,0.49,0.19], use:[0.99,0.90,0.01] }
+  },
+  { model:"LLaVA-1.6-7B*",   type:"vlm",
+    html: { top:[0.70,0.66,0.05], con:[0.43,0.40,0.02], use:[0.98,0.76,0.00] },
+    md:   { top:[0.70,0.54,0.04], con:[0.46,0.35,0.02], use:[0.99,0.68,0.00] },
+    latex:{ top:[0.71,0.58,0.05], con:[0.44,0.37,0.03], use:[0.99,0.73,0.00] }
+  },
+  { model:"TableLLaVA-v1.5*", type:"spec",
+    html: { top:[0.73,0.71,0.68], con:[0.33,0.33,0.31], use:[1.00,0.96,0.71] },
+    md:   { top:[0.73,0.72,0.70], con:[0.43,0.43,0.41], use:[1.00,0.97,0.74] },
+    latex:{ top:[0.58,0.57,0.54], con:[0.29,0.29,0.28], use:[1.00,0.98,0.80] }
+  },
+];
+
+// ─────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────
+
+function avg(arr) {
+  if (!arr || !arr.length) return null;
+  const valid = arr.filter(v => v !== null && v !== undefined);
+  return valid.length ? valid.reduce((a,b)=>a+b,0)/valid.length : null;
+}
+
+function typeBadge(t) {
+  const map = { proprietary:'type-prop', vlm:'type-vlm', llm:'type-llm', spec:'type-spec' };
+  const lbl = { proprietary:'Prop.', vlm:'VLM', llm:'LLM', spec:'Spec.' };
+  return `<span class="type-badge ${map[t]}">${lbl[t]}</span>`;
+}
+
+// Color a QA value (0–100)
+function heatQA(v) {
+  if (v === null || v === undefined) return '';
+  if (v >= 55) return '#bbf7d0';
+  if (v >= 45) return '#d1fae5';
+  if (v >= 35) return '#fef9c3';
+  if (v >= 25) return '#fef3c7';
+  if (v >= 15) return '#fed7aa';
+  return '#fee2e2';
+}
+// Color a GriTS / usability value (0–1)
+function heatSR(v) {
+  if (v === null) return '';
+  if (v >= 0.95) return '#bbf7d0';
+  if (v >= 0.85) return '#d1fae5';
+  if (v >= 0.70) return '#fef9c3';
+  if (v >= 0.50) return '#fef3c7';
+  return '#fee2e2';
+}
+// Color a SUC value (0–100)
+function heatSUC(v) {
+  if (v === null) return '';
+  if (v >= 70) return '#bbf7d0';
+  if (v >= 50) return '#d1fae5';
+  if (v >= 30) return '#fef9c3';
+  if (v >= 15) return '#fed7aa';
+  return '#fee2e2';
+}
+
+function numCell(v, heatFn, decimals) {
+  if (v === null || v === undefined) return `<td class="na">—</td>`;
+  const bg = heatFn(v);
+  const txt = typeof decimals === 'undefined' ? v.toFixed(1) : v.toFixed(decimals);
+  return `<td class="num"><span class="heat" style="background:${bg};">${txt}</span></td>`;
+}
+
+// ─────────────────────────────────────────────────────────────
+// QA TABLE
+// ─────────────────────────────────────────────────────────────
+
+let qaSort = { col:'img_avg', dir:'desc' };
+let qaFilter = 'all';
+
+function qaRow(d) {
+  const ia = avg(d.img);
+  const ta = avg(d.txt);
+  return {
+    model:d.model, params:d.params, type:d.type,
+    img_avg: ia, img_html: d.img?d.img[0]:null, img_latex: d.img?d.img[1]:null, img_md: d.img?d.img[2]:null,
+    txt_avg: ta, txt_html: d.txt?d.txt[0]:null, txt_latex: d.txt?d.txt[1]:null, txt_md: d.txt?d.txt[2]:null,
+  };
+}
+
+function renderQA() {
+  let rows = QA.map(qaRow);
+  if (qaFilter !== 'all') rows = rows.filter(r => r.type === qaFilter);
+  rows.sort((a,b) => {
+    const va = a[qaSort.col] ?? -Infinity, vb = b[qaSort.col] ?? -Infinity;
+    if (typeof va === 'string') return qaSort.dir==='asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+    return qaSort.dir==='asc' ? va-vb : vb-va;
+  });
+  const tbody = document.getElementById('qa-tbody');
+  tbody.innerHTML = rows.map(r => `<tr data-type="${r.type}">
+    <td><span class="model-name">${r.model}</span><span class="param-badge">${r.params}</span> ${typeBadge(r.type)}</td>
+    ${numCell(r.img_avg, heatQA)} ${numCell(r.img_html, heatQA)} ${numCell(r.img_latex, heatQA)} ${numCell(r.img_md, heatQA)}
+    ${numCell(r.txt_avg, heatQA)} ${numCell(r.txt_html, heatQA)} ${numCell(r.txt_latex, heatQA)} ${numCell(r.txt_md, heatQA)}
+  </tr>`).join('');
+  updateSortHeaders('qa-table', qaSort);
+}
+
+// ─────────────────────────────────────────────────────────────
+// SUC TABLE
+// ─────────────────────────────────────────────────────────────
+
+let sucPipe = 'vlm-img';
+let sucFmt  = 'html';
+let sucSort = { col:'overall', dir:'desc' };
+
+function sucOverall(vals) { return avg(vals); }
+
+function renderSUC() {
+  let rows = SUC
+    .filter(d => d.data[sucPipe] !== null && d.data[sucPipe] !== undefined)
+    .map(d => {
+      const fmtKey = { html:'html', latex:'latex', md:'md' }[sucFmt];
+      const v = d.data[sucPipe]?.[fmtKey];
+      if (!v) return null;
+      const overall = avg(v);
+      return { model:d.model, type:d.type, overall,
+        tp:v[0], fc:v[1], lc:v[2], sd:v[3], rows:v[4], cols:v[5], clu:v[6], rlu:v[7], cort:v[8], rort:v[9] };
+    }).filter(Boolean);
+
+  rows.sort((a,b) => {
+    const va = a[sucSort.col] ?? -Infinity, vb = b[sucSort.col] ?? -Infinity;
+    if (typeof va === 'string') return sucSort.dir==='asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+    return sucSort.dir==='asc' ? va-vb : vb-va;
+  });
+
+  const tbody = document.getElementById('suc-tbody');
+  tbody.innerHTML = rows.map(r => `<tr>
+    <td><span class="model-name">${r.model}</span> ${typeBadge(r.type)}</td>
+    ${numCell(r.overall, heatSUC)} ${numCell(r.tp,heatSUC)} ${numCell(r.fc,heatSUC)}
+    ${numCell(r.lc,heatSUC)} ${numCell(r.sd,heatSUC)} ${numCell(r.rows,heatSUC)}
+    ${numCell(r.cols,heatSUC)} ${numCell(r.clu,heatSUC)} ${numCell(r.rlu,heatSUC)}
+    ${numCell(r.cort,heatSUC)} ${numCell(r.rort,heatSUC)}
+  </tr>`).join('');
+  updateSortHeaders('suc-table', sucSort);
+}
+
+// ─────────────────────────────────────────────────────────────
+// SR TABLE
+// ─────────────────────────────────────────────────────────────
+
+let srSrc  = 'html';
+let srSort = { col:'html_top', dir:'desc' };
+
+function renderSR() {
+  let rows = SR.map(d => {
+    const s = d[srSrc];
+    if (!s) return null;
+    return {
+      model:d.model, type:d.type,
+      html_top: s.top[0], md_top: s.top[1], tex_top: s.top[2],
+      html_con: s.con[0], md_con: s.con[1], tex_con: s.con[2],
+      html_use: s.use[0], md_use: s.use[1], tex_use: s.use[2],
+    };
+  }).filter(Boolean);
+
+  rows.sort((a,b) => {
+    const va = a[srSort.col] ?? -Infinity, vb = b[srSort.col] ?? -Infinity;
+    if (typeof va === 'string') return srSort.dir==='asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+    return srSort.dir==='asc' ? va-vb : vb-va;
+  });
+
+  const tbody = document.getElementById('sr-tbody');
+  tbody.innerHTML = rows.map(r => `<tr>
+    <td><span class="model-name">${r.model}</span> ${typeBadge(r.type)}</td>
+    ${numCell(r.html_top, heatSR, 2)} ${numCell(r.html_con, heatSR, 2)} ${numCell(r.html_use, heatSR, 2)}
+    ${numCell(r.md_top,   heatSR, 2)} ${numCell(r.md_con,   heatSR, 2)} ${numCell(r.md_use,   heatSR, 2)}
+    ${numCell(r.tex_top,  heatSR, 2)} ${numCell(r.tex_con,  heatSR, 2)} ${numCell(r.tex_use,  heatSR, 2)}
+  </tr>`).join('');
+  updateSortHeaders('sr-table', srSort);
+}
+
+// ─────────────────────────────────────────────────────────────
+// SHARED SORT HEADER UPDATE
+// ─────────────────────────────────────────────────────────────
+
+function updateSortHeaders(tableId, sortState) {
+  const table = document.getElementById(tableId);
+  if (!table) return;
+  table.querySelectorAll('th.sortable').forEach(th => {
+    th.classList.remove('asc','desc');
+    if (th.dataset.col === sortState.col)
+      th.classList.add(sortState.dir);
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
+// EVENT WIRING
+// ─────────────────────────────────────────────────────────────
+
+// Tab switching
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+// QA filters
+document.querySelectorAll('[data-filter="qa"]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-filter="qa"]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    qaFilter = btn.dataset.val;
+    renderQA();
+  });
+});
+
+// QA sort
+document.querySelectorAll('#qa-table th.sortable').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (qaSort.col === col) qaSort.dir = qaSort.dir === 'desc' ? 'asc' : 'desc';
+    else { qaSort.col = col; qaSort.dir = 'desc'; }
+    renderQA();
+  });
+});
+
+// SUC pipeline
+document.querySelectorAll('[data-pipe]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-pipe]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    sucPipe = btn.dataset.pipe;
+    renderSUC();
+  });
+});
+
+// SUC format
+document.querySelectorAll('[data-fmt]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-fmt]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    sucFmt = btn.dataset.fmt;
+    renderSUC();
+  });
+});
+
+// SUC sort
+document.querySelectorAll('#suc-table th.sortable').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (sucSort.col === col) sucSort.dir = sucSort.dir === 'desc' ? 'asc' : 'desc';
+    else { sucSort.col = col; sucSort.dir = 'desc'; }
+    renderSUC();
+  });
+});
+
+// SR source
+document.querySelectorAll('[data-src]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-src]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    srSrc = btn.dataset.src;
+    renderSR();
+  });
+});
+
+// SR sort
+document.querySelectorAll('#sr-table th.sortable').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (srSort.col === col) srSort.dir = srSort.dir === 'desc' ? 'asc' : 'desc';
+    else { srSort.col = col; srSort.dir = 'desc'; }
+    renderSR();
+  });
+});
+
+// ─────────────────────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────────────────────
+document.getElementById('year').textContent = new Date().getFullYear();
+renderQA();
+renderSUC();
+renderSR();
+</script>
+</body>
+</html>

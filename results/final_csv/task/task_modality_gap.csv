@@ -1,0 +1,14 @@
+model,vlm_acc,vlmt_acc,delta
+SmolVLM2-2.2B-Instruct,28.09,18.32,-9.77
+ministral_3-14B-Instruct,42.09,37.33,-4.76
+llava_1.6-vicuna-7B,31.76,27.81,-3.95
+InternVL3.5-14B,48.24,45.48,-2.76
+InternVL3.5-30B-A3B,48.72,46.10,-2.62
+llava_1.6-vicuna-13B,24.62,23.64,-0.98
+gemini-3-flash-preview,65.33,65.38,0.05
+Qwen3-VL-30B-A3B-Instruct,41.57,42.86,1.29
+gpt-5.2,55.08,57.57,2.49
+Qwen3-VL-8B-Instruct,49.76,52.95,3.19
+gemma_3-27B-IT,45.62,52.62,7.00
+gemma_3-12B-IT,39.00,49.29,10.29
+table-llava-v1.5-7b-hf,2.10,26.46,24.36

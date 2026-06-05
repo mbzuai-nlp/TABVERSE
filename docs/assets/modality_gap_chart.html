@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: transparent; padding: 16px 20px; }
+  .title { font-size: 14px; font-weight: 800; color: #1e293b; text-align: center; margin-bottom: 4px; }
+  .subtitle { font-size: 11px; color: #64748b; text-align: center; margin-bottom: 16px; }
+  .chart-wrap { position: relative; }
+  .bar-row { display: flex; align-items: center; margin-bottom: 9px; }
+  .label { font-size: 11px; color: #374151; font-weight: 500; text-align: right; width: 160px; flex-shrink: 0; padding-right: 10px; }
+  .bar-area { flex: 1; position: relative; display: flex; align-items: center; }
+  .zero-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: #1e293b; z-index: 2; }
+  .bar { height: 22px; border-radius: 3px; position: absolute; display: flex; align-items: center; }
+  .bar-pos { background: #b45454; left: 50%; }
+  .bar-neg { background: #5b8dd9; right: 50%; }
+  .val-label { font-size: 11px; font-weight: 700; white-space: nowrap; position: absolute; }
+  .val-pos { color: #7f1d1d; }
+  .val-neg { color: #1e3a5f; }
+  .legend { display: flex; gap: 20px; justify-content: flex-end; margin-bottom: 8px; }
+  .leg-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #374151; }
+  .leg-swatch { width: 14px; height: 14px; border-radius: 3px; }
+  .axis-label { font-size: 10px; color: #94a3b8; text-align: center; margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="title">Modality Gap: Does Image Input Help?</div>
+<div class="subtitle">Δ Accuracy (pp) = VLM-TEXT avg − VLM avg [avg over HTML / LaTeX / Markdown]</div>
+
+<div class="legend">
+  <div class="leg-item"><div class="leg-swatch" style="background:#b45454;"></div> Δ &gt; 0 (text is better)</div>
+  <div class="leg-item"><div class="leg-swatch" style="background:#5b8dd9;"></div> Δ ≤ 0 (image helps)</div>
+</div>
+
+<div class="chart-wrap" id="chart"></div>
+<div class="axis-label">← Image helps &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Text is better →</div>
+
+<script>
+const data = [
+  { label: "TableLLaVA-v1.5-7B", val: 24.4 },
+  { label: "Gemma-3-12B-IT",     val: 10.3 },
+  { label: "Gemma-3-27B-IT",     val: 7.0  },
+  { label: "Qwen3-VL-8B-IT",     val: 3.2  },
+  { label: "GPT-5.2",            val: 2.5  },
+  { label: "Qwen3-VL-30B-A3B",   val: 1.3  },
+  { label: "Gemini-3-Flash",      val: 0.1  },
+  { label: "LLaVA-1.6-13B",      val: -1.0 },
+  { label: "InternVL3.5-30B-A3B",val: -2.6 },
+  { label: "InternVL3.5-14B",    val: -2.8 },
+  { label: "LLaVA-1.6-7B",       val: -4.0 },
+  { label: "Ministral-3-14B",    val: -4.8 },
+  { label: "SmolVLM2-2.2B",      val: -9.8 },
+];
+
+const MAX = 26; // scale max
+const BAR_W = 400; // total bar area width in px
+const UNIT = BAR_W / (MAX * 2); // px per pp
+
+const chart = document.getElementById('chart');
+
+data.forEach(d => {
+  const row = document.createElement('div');
+  row.className = 'bar-row';
+
+  const lbl = document.createElement('div');
+  lbl.className = 'label';
+  lbl.textContent = d.label;
+
+  const barArea = document.createElement('div');
+  barArea.className = 'bar-area';
+  barArea.style.cssText = `width:${BAR_W}px; height:22px; position:relative;`;
+
+  // zero line
+  const zero = document.createElement('div');
+  zero.className = 'zero-line';
+  barArea.appendChild(zero);
+
+  const absW = Math.abs(d.val) * UNIT;
+  const bar = document.createElement('div');
+  bar.className = 'bar ' + (d.val >= 0 ? 'bar-pos' : 'bar-neg');
+  bar.style.width = Math.max(absW, 2) + 'px';
+  bar.style.top = '0';
+
+  const valLbl = document.createElement('span');
+  valLbl.className = 'val-label ' + (d.val >= 0 ? 'val-pos' : 'val-neg');
+  const formatted = (d.val >= 0 ? '+' : '') + d.val.toFixed(1);
+
+  if (d.val >= 0) {
+    valLbl.style.left = (absW + 4) + 'px';
+  } else {
+    valLbl.style.right = (absW + 4) + 'px';
+  }
+  bar.appendChild(valLbl);
+  valLbl.textContent = formatted;
+
+  barArea.appendChild(bar);
+  row.appendChild(lbl);
+  row.appendChild(barArea);
+  chart.appendChild(row);
+});
+</script>
+</body>
+</html>

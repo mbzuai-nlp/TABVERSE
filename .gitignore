@@ -1,0 +1,39 @@
+# Ignore Python cache
+__pycache__/
+*.py[cod]
+
+# Ignore Jupyter Notebooks
+# *.ipynb
+
+# Ignore temporary or intermediate directories
+tmp/
+temp/
+.cache/
+logs/
+models/
+# VSCode or PyCharm user-specific files
+.vscode/
+.idea/
+src/a.py
+# OS-specific
+.DS_Store
+Thumbs.db
+
+
+# Ignore virtual environments
+.venv/
+env/
+venv/
+.env
+
+# Ignore structured output artifacts
+structured_representations/
+ground_truth
+
+#tmp files
+.torchinductor_cache/
+.triton_cache/
+
+.FIX_SUC/
+
+texlive.sif

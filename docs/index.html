@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TABVERSE: Benchmarking Cross-Format Table Understanding in LLMs and VLMs</title>
+  <meta name="description" content="TABVERSE: A controlled multimodal table benchmark aligning HTML, LaTeX, and Markdown representations with rendered images for cross-format and cross-modality table evaluation." />
+  <meta property="og:title" content="TABVERSE: Benchmarking Cross-Format Table Understanding in LLMs and VLMs" />
+  <meta property="og:description" content="700 Q–Table pairs · 3 formats · 3 tasks · 17 models evaluated." />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body { background: radial-gradient(1200px 600px at 50% -10%, #ffffff 0%, #f8fafc 55%, #eef2f7 100%); }
+    .btn { display: inline-flex; align-items: center; gap: .5rem; padding: .55rem .9rem; border-radius: 1rem; border: 1px solid #e5e7eb; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.04); font-size: .95rem; text-decoration: none; color: #1f2937; cursor: pointer; }
+    .btn:hover { box-shadow: 0 6px 14px rgba(0,0,0,.08); }
+    .section { max-width: 72rem; margin: 0 auto; padding-left: 1.25rem; padding-right: 1.25rem; }
+    code.bib { white-space: pre; display: block; overflow: auto; padding: 1rem; border-radius: 1rem; background: #0b1020; color: #e5e7eb; font-size: .85rem; line-height: 1.6; }
+    .stat-card { background: rgba(255,255,255,0.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(229,231,235,0.8); border-radius: 1rem; padding: 1.5rem 1rem; text-align: center; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+    .stat-number { font-size: 2.25rem; font-weight: 800; color: #1d4ed8; line-height: 1; }
+    .stat-label { font-size: .8rem; color: #6b7280; margin-top: .4rem; }
+    .finding-card { background: rgba(255,255,255,0.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(229,231,235,0.8); border-radius: 1rem; padding: 1.25rem 1.5rem; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+    .fig-wrap { background: rgba(255,255,255,0.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(229,231,235,0.8); border-radius: 1.25rem; padding: .75rem; box-shadow: 0 1px 3px rgba(0,0,0,.05); overflow: hidden; }
+    .fig-cap { text-align: center; font-size: .8rem; color: #6b7280; margin-top: .65rem; line-height: 1.5; max-width: 36rem; margin-left: auto; margin-right: auto; }
+    sup { font-size: .65em; vertical-align: super; }
+    .task-pill { display: inline-flex; align-items: center; gap: .3rem; border-radius: .75rem; padding: .25rem .75rem; font-size: .8rem; font-weight: 700; }
+    .format-tag { display: inline-block; border-radius: .5rem; padding: .15rem .6rem; font-size: .75rem; font-weight: 700; }
+  </style>
+</head>
+<body class="text-gray-800 selection:bg-blue-200/40">
+
+  <!-- ══════════════════════════ HERO ══════════════════════════ -->
+  <header class="section pt-12 pb-6 text-center">
+    <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+      TABVERSE: Benchmarking Cross-Format<br class="hidden sm:block" />
+      Table Understanding in LLMs and VLMs
+    </h1>
+    <p class="mt-3 text-base text-gray-500 font-medium tracking-wide uppercase text-sm">
+      700 Q–Table Pairs &nbsp;·&nbsp; 3 Formats &nbsp;·&nbsp; 3 Tasks &nbsp;·&nbsp; 17 Models Evaluated
+    </p>
+
+    <!-- Authors -->
+    <div class="mt-5 text-gray-700">
+      <p class="leading-relaxed text-sm sm:text-base">
+        <strong>Momina Ahsan</strong><sup>1</sup>,&ensp;
+        <strong>Sarfraz Ahmad</strong><sup>1</sup>,&ensp;
+        <strong>Ming Shan Hee</strong><sup>1</sup>,&ensp;
+        <strong>Roy Ka-Wei Lee</strong><sup>2</sup>,&ensp;
+        <strong>Preslav Nakov</strong><sup>1</sup>
+      </p>
+      <p class="mt-1 text-sm text-gray-500">
+        <sup>1</sup>Mohamed bin Zayed University of Artificial Intelligence (MBZUAI)
+        &ensp;·&ensp;
+        <sup>2</sup>Singapore University of Technology and Design (SUTD)
+      </p>
+      <p class="text-xs text-gray-400 mt-1">{momina.ahsan, preslav.nakov}@mbzuai.ac.ae &nbsp;·&nbsp; roy_lee@sutd.edu.sg</p>
+    </div>
+
+    <div class="mt-6 flex flex-wrap justify-center gap-3">
+      <a class="btn" href="./assets/dataset.pdf" target="_blank" rel="noopener">
+        <img src="./assets/adobe.svg" alt="PDF" class="w-5 h-5" />
+        Paper
+      </a>
+      <a class="btn" href="http://anonymous.for.review" target="_blank" rel="noopener">
+        <img src="./assets/github.png" alt="GitHub" class="w-5 h-5" />
+        Code
+      </a>
+      <a class="btn" href="http://anonymous.for.review" target="_blank" rel="noopener">
+        <img src="./assets/hf.png" alt="Hugging Face" class="w-5 h-5" />
+        Dataset
+      </a>
+      <a class="btn" href="./leaderboard.html">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 21h8M12 17v4M18 3H6v3a4 4 0 0 1-4 4h1a5 5 0 0 0 5-5V3h8v2a5 5 0 0 0 5 5h1a4 4 0 0 1-4-4V3z"/>
+          <path d="M7 13h10v2a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-2z"/>
+        </svg>
+        Leaderboard
+      </a>
+      <button class="btn" id="copy-bib">
+        <img src="./assets/quotes.png" alt="Citation" class="w-5 h-5" />
+        Citation
+      </button>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════ ABSTRACT ══════════════════════════ -->
+  <section class="section py-8">
+    <h2 class="text-xl font-semibold">Abstract</h2>
+    <p class="mt-3 leading-7 text-gray-700 text-[15.5px]">
+      Large Language Models (LLMs) and Vision-Language Models (VLMs) are increasingly evaluated on table reasoning tasks, but the role of table representation remains under-explored. In practice, the same table content may appear in different structural formats — such as HTML, Markdown, and LaTeX — or as rendered images. However, existing evaluations often let content, format, layout, and modality vary together, making it difficult to isolate representation effects. We introduce <strong>TABVERSE</strong>, a controlled multimodal table benchmark that aligns the same table content across multiple structural formats and rendered images, with question category and difficulty tags. This design enables systematic evaluation of representation effects while holding table content fixed. We evaluate LLMs and VLMs across three tasks: <strong>Question Answering (QA)</strong>, <strong>Structural Understanding Capability (SUC)</strong>, and <strong>Structure Reconstruction (SR)</strong>. Our results show that representation choice substantially affects table understanding. Models generally perform better with structured text than with rendered images, but the size of this gap depends on the task, model, and format. <strong>HTML is often the most robust text format</strong>, while row-sensitive structural tasks and syntactically usable LaTeX reconstruction remain challenging.
+    </p>
+  </section>
+
+  <!-- ══════════════════════════ PIPELINE ══════════════════════════ -->
+  <section class="section py-8">
+    <h2 class="text-xl font-semibold">Benchmark Overview &amp; Pipeline</h2>
+    <p class="mt-2 text-gray-600 text-[15px] leading-6">
+      TABVERSE is constructed from held-out splits of five TableQA datasets. Each table is converted into three structural formats (HTML, Markdown, LaTeX) and rendered into aligned PNG images. The benchmark supports three tasks across text and image modalities, enabling controlled comparison while table content remains fixed.
+    </p>
+    <div class="mt-5" style="border-radius:1.25rem;overflow:hidden;">
+      <img src="./assets/fig1_pipeline.png"
+           alt="TABVERSE Benchmark Overview Pipeline — Figure 1"
+           style="width:100%;height:auto;display:block;mix-blend-mode:multiply;" />
+    </div>
+    <p class="fig-cap mt-3">
+      <strong>Figure 1.</strong> TABVERSE pipeline: five source datasets → three structural formats + rendered images → three evaluation tasks (QA, SUC, SR) across LLM, VLM-Image, and VLM-Text pipelines. The balanced evaluation set contains 700 question–table pairs (350 Easy, 350 Hard) from 629 unique tables.
+    </p>
+  </section>
+
+  <!-- ══════════════════════════ DATASET AT A GLANCE ══════════════════════════ -->
+  <section class="section py-8">
+    <h2 class="text-xl font-semibold">Dataset at a Glance</h2>
+
+    <!-- Stat cards -->
+    <div class="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div class="stat-card"><div class="stat-number">700</div><div class="stat-label">Balanced Eval. Set</div></div>
+      <div class="stat-card"><div class="stat-number">6,097</div><div class="stat-label">Full Tagged Pool</div></div>
+      <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Formats + Images</div></div>
+      <div class="stat-card"><div class="stat-number">17</div><div class="stat-label">Models Evaluated</div></div>
+    </div>
+
+    <!-- Source breakdown + annotation info -->
+    <div class="mt-6 grid sm:grid-cols-2 gap-6">
+      <div class="border border-gray-200 rounded-2xl p-5 shadow-sm" style="background:rgba(255,255,255,0.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
+        <h3 class="font-semibold text-base mb-4">Source Datasets</h3>
+        <div class="space-y-3 text-sm text-gray-700">
+          <div class="flex justify-between items-center">
+            <span>FEVEROUS (dev)</span>
+            <span class="font-semibold">794 <span class="text-gray-400">pairs</span></span>
+          </div>
+          <div class="h-px bg-gray-100"></div>
+          <div class="flex justify-between items-center">
+            <span>HybridQA (dev)</span>
+            <span class="font-semibold">1,608 <span class="text-gray-400">pairs</span></span>
+          </div>
+          <div class="h-px bg-gray-100"></div>
+          <div class="flex justify-between items-center">
+            <span>TabFact (test)</span>
+            <span class="font-semibold">1,695 <span class="text-gray-400">pairs</span></span>
+          </div>
+          <div class="h-px bg-gray-100"></div>
+          <div class="flex justify-between items-center">
+            <span>SQA (test)</span>
+            <span class="font-semibold">1,000 <span class="text-gray-400">pairs</span></span>
+          </div>
+          <div class="h-px bg-gray-100"></div>
+          <div class="flex justify-between items-center">
+            <span>WikiTableQuestions</span>
+            <span class="font-semibold">1,000 <span class="text-gray-400">pairs</span></span>
+          </div>
+          <div class="h-px bg-gray-100"></div>
+          <div class="flex justify-between items-center font-semibold">
+            <span>Total tagged pool</span><span>6,097 pairs · 4,434 tables</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="border border-gray-200 rounded-2xl p-5 shadow-sm" style="background:rgba(255,255,255,0.6);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);">
+        <h3 class="font-semibold text-base mb-4">Balanced Evaluation Set</h3>
+        <div class="grid grid-cols-3 gap-3 text-center">
+          <div class="rounded-xl p-3" style="background:rgba(255,255,255,0.45);">
+            <div class="font-bold text-xl">700</div>
+            <div class="text-xs text-gray-500 mt-1">Q–Table pairs</div>
+          </div>
+          <div class="rounded-xl p-3" style="background:rgba(255,255,255,0.45);">
+            <div class="font-bold text-xl">629</div>
+            <div class="text-xs text-gray-500 mt-1">Unique tables</div>
+          </div>
+          <div class="rounded-xl p-3" style="background:rgba(255,255,255,0.45);">
+            <div class="font-bold text-xl">7</div>
+            <div class="text-xs text-gray-500 mt-1">Q categories</div>
+          </div>
+        </div>
+        <div class="mt-4 space-y-2 text-sm text-gray-600">
+          <p>· <strong>350 Easy</strong> + <strong>350 Hard</strong> questions, 50 per category per difficulty</p>
+          <p>· Difficulty estimated from zero-shot VLM performance on rendered images</p>
+          <p>· Categories: Simple Lookup, Conditional Lookup, Multi-item Lookup, Aggregation/Arithmetic, Comparison/Extremum, Single-step &amp; Multi-hop Binary Verification</p>
+          <p>· Category tags assigned by Gemini-3-Flash + manual review</p>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ══════════════════════════ TASKS ══════════════════════════ -->
+  <section class="section py-8">
+    <h2 class="text-xl font-semibold">Supported Tasks</h2>
+    <p class="mt-2 text-gray-600 text-[15px] leading-6">
+      TABVERSE supports three complementary tasks that probe different aspects of table understanding under controlled representation variation.
+    </p>
+    <div class="mt-5 grid sm:grid-cols-3 gap-5">
+
+      <!-- QA -->
+      <div class="border border-violet-200 rounded-2xl p-5 shadow-sm" style="background:rgba(237,233,254,0.4);backdrop-filter:blur(10px);">
+        <div class="task-pill mb-3" style="background:#ede9fe;color:#5b21b6;border:1px solid #a78bfa;">
+          <span class="text-base">🔍</span> Question Answering
+        </div>
+        <h3 class="font-bold text-base text-violet-900">QA</h3>
+        <p class="text-sm text-gray-600 mt-2 leading-6">Given a question and table (structured text or image), the model predicts an answer. Evaluated via exact-match accuracy. Covers 7 question categories from lookup to multi-hop verification.</p>
+        <div class="mt-3 text-xs font-semibold text-violet-700 bg-violet-50 rounded-lg px-3 py-2">700 × 3 formats · Exact-match accuracy</div>
+      </div>
+
+      <!-- SUC -->
+      <div class="border border-sky-200 rounded-2xl p-5 shadow-sm" style="background:rgba(224,242,254,0.4);backdrop-filter:blur(10px);">
+        <div class="task-pill mb-3" style="background:#e0f2fe;color:#0c4a6e;border:1px solid #38bdf8;">
+          <span class="text-base">📐</span> Structural Understanding
+        </div>
+        <h3 class="font-bold text-base text-sky-900">SUC</h3>
+        <p class="text-sm text-gray-600 mt-2 leading-6">10 structure-oriented probes including boundary detection, size estimation, coordinate lookup, and row/column retrieval. Tests structural awareness independent of content.</p>
+        <div class="mt-3 text-xs font-semibold text-sky-700 bg-sky-50 rounded-lg px-3 py-2">629 × 3 formats · 10 subtasks</div>
+      </div>
+
+      <!-- SR -->
+      <div class="border border-amber-200 rounded-2xl p-5 shadow-sm" style="background:rgba(254,243,199,0.4);backdrop-filter:blur(10px);">
+        <div class="task-pill mb-3" style="background:#fef9c3;color:#713f12;border:1px solid #facc15;">
+          <span class="text-base">🔧</span> Structure Reconstruction
+        </div>
+        <h3 class="font-bold text-base text-amber-900">SR</h3>
+        <p class="text-sm text-gray-600 mt-2 leading-6">Given a rendered table image, reconstruct the table in HTML, Markdown, or LaTeX. Evaluated via GriTS-Topology, GriTS-Content, and syntactic usability (parse/compile success).</p>
+        <div class="mt-3 text-xs font-semibold text-amber-700 bg-amber-50 rounded-lg px-3 py-2">629 × 3 images → 3 target formats</div>
+      </div>
+
+    </div>
+
+    <!-- SR pipeline diagram — using the actual figure from the paper -->
+    <div class="mt-8">
+      <h3 class="text-base font-semibold text-gray-700 mb-3">SR Evaluation Pipeline</h3>
+      <div style="max-width:620px;margin:0 auto;">
+        <img src="./assets/generation.png" alt="SR Evaluation Pipeline: Structure → Renderer → Image → VLM → Structure' → Evaluate"
+             style="width:100%;height:auto;display:block;mix-blend-mode:multiply;" />
+      </div>
+      <p class="fig-cap mt-2">
+        <strong>Figure 2.</strong> Structure Reconstruction pipeline. A ground-truth table x is rendered into an image via three format-specific renderers. A VLM reconstructs the table as x′, which is then compared against x using GriTS topology and content metrics, plus syntactic usability checks.
+      </p>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ KEY FINDINGS ══════════════════════════ -->
+  <section class="section py-8">
+    <h2 class="text-xl font-semibold">Key Findings</h2>
+    <div class="mt-4 grid sm:grid-cols-2 gap-4">
+      <div class="finding-card">
+        <p class="text-2xl mb-2">📊</p>
+        <h3 class="font-semibold text-base">Representation substantially affects performance</h3>
+        <p class="text-sm text-gray-600 mt-1 leading-6">Structured text often outperforms rendered images, especially for structure-sensitive tasks. The gap depends on the model family — Gemma-3 benefits most from text inputs (+7–10 pp), while InternVL3.5 and SmolVLM2 perform similarly or better on images.</p>
+      </div>
+      <div class="finding-card">
+        <p class="text-2xl mb-2">🏆</p>
+        <h3 class="font-semibold text-base">HTML is the safest text format</h3>
+        <p class="text-sm text-gray-600 mt-1 leading-6">Across QA and SUC, HTML is consistently the most robust structural-text format. LaTeX and Markdown can be less stable for some models, particularly for coordinate-based tasks. Rendered-image results show smaller and less consistent format differences.</p>
+      </div>
+      <div class="finding-card">
+        <p class="text-2xl mb-2">🔬</p>
+        <h3 class="font-semibold text-base">Row tasks remain the hardest SUC challenge</h3>
+        <p class="text-sm text-gray-600 mt-1 leading-6">Column counting and retrieval are the easiest SUC subtasks (&gt;60% mean accuracy). Row retrieval (5.0%) and cell lookup (9.9%) are extremely hard across all pipelines. Models are better at global column structure than precise row-level or coordinate-based indexing.</p>
+      </div>
+      <div class="finding-card">
+        <p class="text-2xl mb-2">⚡</p>
+        <h3 class="font-semibold text-base">LaTeX reconstruction is the SR bottleneck</h3>
+        <p class="text-sm text-gray-600 mt-1 leading-6">Strong VLMs reliably recover table topology from images but struggle with exact cell content and compilable LaTeX syntax. Usability scores for HTML/Markdown targets are near-perfect for strong models, while LaTeX usability can drop to 0.77 even for top models.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ QA RESULTS ══════════════════════════ -->
+  <section class="section py-8">
+    <h2 class="text-xl font-semibold">QA Results</h2>
+    <p class="mt-2 text-gray-600 text-[15px] leading-6">
+      Gemini-3-Flash-Preview achieves the highest scores across all formats and modalities, followed by GPT-5.2. Among open-weight VLMs, Qwen3-VL-8B is the strongest under strict exact match, while Qwen3-30B-A3B leads text-only LLMs. Symbolic table format affects text-based reasoning more strongly than rendered-image reasoning — text pipelines show larger format gaps than image pipelines.
+    </p>
+    <div class="mt-6 grid sm:grid-cols-2 gap-6">
+      <!-- QA results chart -->
+      <div>
+        <div id="qa-wrap" style="position:relative;overflow:hidden;border-radius:1rem;border:1px solid #e5e7eb;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+          <iframe id="qa-frame" src="./assets/qa_results_chart.html" scrolling="no" loading="lazy"
+            style="width:680px;height:540px;border:none;display:block;transform-origin:0 0;background:transparent;"></iframe>
+        </div>
+        <script>(function(){var W=680,H=540;function r(){var w=document.getElementById("qa-wrap"),f=document.getElementById("qa-frame");if(!w||!f)return;var sc=w.clientWidth/W;f.style.transform="scale("+sc+")";w.style.height=Math.round(H*sc)+"px";}r();window.addEventListener("resize",r);var fr=document.getElementById("qa-frame");if(fr)fr.addEventListener("load",r);})();</script>
+        <p class="fig-cap mt-3">
+          <strong>Figure 3.</strong> QA exact-match accuracy averaged over HTML, LaTeX, and Markdown representations. Blue bars = VLM-Image pipeline; yellow/green bars = text pipeline. Proprietary models lead, but open VLMs Qwen3-VL-8B and InternVL3.5 are competitive.
+        </p>
+      </div>
+
+      <!-- Category radar -->
+      <div>
+        <div>
+          <img src="./assets/task_category_radar_best_models.png" alt="Task category radar chart"
+               class="w-full h-auto rounded-xl" style="mix-blend-mode:multiply;" />
+        </div>
+        <p class="fig-cap mt-3">
+          <strong>Figure 4.</strong> Category-wise QA accuracy for the strongest model from each pipeline (Gemini-3-Flash VLM, Gemini-3-Flash VLM-Text, Qwen3-30B-A3B LLM). Verification questions are easiest; Multi-item Lookup and Aggregation/Arithmetic are hardest.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ MODALITY GAP ══════════════════════════ -->
+  <section class="section py-8">
+    <h2 class="text-xl font-semibold">Modality Gap Analysis</h2>
+    <p class="mt-2 text-gray-600 text-[15px] leading-6">
+      The chart below shows Δ = VLM-Text avg − VLM-Image avg, averaged over HTML, LaTeX, and Markdown. Positive values indicate that structured text helps more than rendered images; negative values indicate that images help more. The direction of this gap is strongly model-dependent — no single modality dominates across all architectures.
+    </p>
+    <div class="mt-5 grid sm:grid-cols-2 gap-6 items-start">
+      <div>
+        <div id="mg-wrap" style="position:relative;overflow:hidden;border-radius:1rem;border:1px solid #e5e7eb;box-shadow:0 1px 3px rgba(0,0,0,.05);">
+          <iframe id="mg-frame" src="./assets/modality_gap_chart.html" scrolling="no" loading="lazy"
+            style="width:680px;height:420px;border:none;display:block;transform-origin:0 0;background:transparent;"></iframe>
+        </div>
+        <script>(function(){var W=680,H=420;function r(){var w=document.getElementById("mg-wrap"),f=document.getElementById("mg-frame");if(!w||!f)return;var sc=w.clientWidth/W;f.style.transform="scale("+sc+")";w.style.height=Math.round(H*sc)+"px";}r();window.addEventListener("resize",r);var fr=document.getElementById("mg-frame");if(fr)fr.addEventListener("load",r);})();</script>
+        <p class="fig-cap mt-3">
+          <strong>Figure 5.</strong> QA modality gap per model. Δ accuracy (pp) = VLM-Text avg − VLM avg, averaged over HTML/LaTeX/Markdown. Gemma-3 models and TableLLaVA benefit from text inputs; InternVL3.5, SmolVLM2, and Ministral perform better on images.
+        </p>
+      </div>
+      <div class="space-y-4">
+        <div class="finding-card">
+          <h3 class="font-semibold text-sm text-gray-800">Text-favoring models (+Δ)</h3>
+          <p class="text-sm text-gray-600 mt-1 leading-6">Gemma-3 models show the largest text advantage (+7 to +10 pp), likely reflecting strong instruction-following from structured markup. TableLLaVA shows +24.4 pp but starts from a very low image baseline.</p>
+        </div>
+        <div class="finding-card">
+          <h3 class="font-semibold text-sm text-gray-800">Image-favoring models (−Δ)</h3>
+          <p class="text-sm text-gray-600 mt-1 leading-6">InternVL3.5, LLaVA-1.6, Ministral-3, and SmolVLM2 all perform better on rendered images. SmolVLM2 shows the largest image advantage (−9.8 pp), suggesting these models parse visual layout more reliably than long structured-text inputs.</p>
+        </div>
+        <div class="finding-card">
+          <h3 class="font-semibold text-sm text-gray-800">Near-zero gap</h3>
+          <p class="text-sm text-gray-600 mt-1 leading-6">Gemini-3-Flash-Preview stays near zero (Δ = +0.1), showing stable performance across both modalities — consistent with its top overall accuracy across all formats and pipelines.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ SUC RESULTS ══════════════════════════ -->
+  <section class="section py-8">
+    <h2 class="text-xl font-semibold">Structural Understanding Capability (SUC)</h2>
+    <p class="mt-2 text-gray-600 text-[15px] leading-6">
+      SUC results reveal a clear difficulty hierarchy: column-oriented subtasks are easy while row-level and coordinate-based tasks are very hard. Structured text input generally improves SUC over rendered images, especially for row-boundary and header-sensitive tasks. Header and indexing conventions strongly affect scores — using an explicit prompt (stating 0-indexed coordinates, excluding headers) improves index-dependent subtask performance by up to +94.8 pp.
+    </p>
+    <div class="mt-6 flex flex-col gap-8">
+      <!-- SUC global difficulty -->
+      <div>
+        <img src="./assets/suc_fig_task_difficulty.png"
+             alt="SUC Global Task Difficulty"
+             class="w-full h-auto" style="mix-blend-mode:multiply;" />
+        <p class="fig-cap mt-3">
+          <strong>Figure 6.</strong> Global SUC task difficulty averaged over all models, pipelines, and formats. Column counting (#Cols: 62.8%) and column retrieval (Co.Rt.: 61.3%) are the easiest; cell lookup (C.Lu.: 9.9%) and row retrieval (Ro.Rt.: 5.0%) are the hardest.
+        </p>
+      </div>
+
+      <!-- Pipeline comparison -->
+      <div>
+        <img src="./assets/suc_fig_pipeline_comparison.png"
+             alt="SUC Task Difficulty per Pipeline"
+             class="w-full h-auto" style="mix-blend-mode:multiply;" />
+        <p class="fig-cap mt-3">
+          <strong>Figure 7.</strong> SUC task difficulty per pipeline (VLM / VLM-TEXT / LLM). Structured text inputs consistently improve scores over images for row-sensitive subtasks. Row retrieval and cell lookup remain the main bottlenecks across all three pipelines.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ SR RESULTS ══════════════════════════ -->
+  <section class="section py-8">
+    <h2 class="text-xl font-semibold">Structure Reconstruction (SR)</h2>
+    <p class="mt-2 text-gray-600 text-[15px] leading-6">
+      Strong VLMs such as Qwen3-VL, InternVL3.5, and GPT-5.2 recover table topology reliably (GriTS-Topology &gt; 0.98), but content preservation and compilable LaTeX generation remain challenging. GriTS-Topology is consistently higher than GriTS-Content — models recover broad table layout better than exact cell text. LaTeX usability is the main bottleneck, ranging from near-zero (LLaVA variants) to 0.77–0.95 for stronger open models.
+    </p>
+
+    <!-- SR summary table (HTML-built) -->
+    <div class="mt-6 overflow-x-auto">
+      <div class="fig-wrap p-4">
+        <h3 class="text-sm font-semibold text-gray-700 mb-4">SR Usability — Fraction of syntactically valid outputs (HTML image input)</h3>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="border-b border-gray-200">
+              <th class="text-left py-2 px-3 font-semibold text-gray-600">Model</th>
+              <th class="text-center py-2 px-3 font-semibold text-yellow-700 bg-yellow-50 rounded-t">HTML target</th>
+              <th class="text-center py-2 px-3 font-semibold text-green-700 bg-green-50 rounded-t">Markdown target</th>
+              <th class="text-center py-2 px-3 font-semibold text-pink-700 bg-pink-50 rounded-t">LaTeX target</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-gray-100 bg-yellow-50/30">
+              <td class="py-2 px-3 font-semibold">GPT-5.2</td>
+              <td class="text-center py-2 px-3 font-bold text-green-700">0.99</td>
+              <td class="text-center py-2 px-3 font-bold text-green-700">1.00</td>
+              <td class="text-center py-2 px-3 font-bold text-green-700">0.94</td>
+            </tr>
+            <tr class="border-b border-gray-100">
+              <td class="py-2 px-3 font-semibold">Gemma-3-27B</td>
+              <td class="text-center py-2 px-3">1.00</td>
+              <td class="text-center py-2 px-3">1.00</td>
+              <td class="text-center py-2 px-3 text-orange-600 font-semibold">0.89</td>
+            </tr>
+            <tr class="border-b border-gray-100">
+              <td class="py-2 px-3 font-semibold">Qwen3-VL-30B-A3B</td>
+              <td class="text-center py-2 px-3">1.00</td>
+              <td class="text-center py-2 px-3">1.00</td>
+              <td class="text-center py-2 px-3 text-orange-600 font-semibold">0.77</td>
+            </tr>
+            <tr class="border-b border-gray-100 bg-blue-50/30">
+              <td class="py-2 px-3 font-semibold">Gemini-3-Flash</td>
+              <td class="text-center py-2 px-3 text-red-600 font-bold">0.06</td>
+              <td class="text-center py-2 px-3 font-bold text-green-700">0.99</td>
+              <td class="text-center py-2 px-3 text-orange-600 font-semibold">0.76</td>
+            </tr>
+            <tr class="border-b border-gray-100">
+              <td class="py-2 px-3 font-semibold">InternVL3.5-14B</td>
+              <td class="text-center py-2 px-3">1.00</td>
+              <td class="text-center py-2 px-3">1.00</td>
+              <td class="text-center py-2 px-3 text-orange-600 font-semibold">0.91</td>
+            </tr>
+            <tr class="border-b border-gray-100">
+              <td class="py-2 px-3 font-semibold">LLaVA-1.6-13B</td>
+              <td class="text-center py-2 px-3">0.99</td>
+              <td class="text-center py-2 px-3">0.90</td>
+              <td class="text-center py-2 px-3 text-red-600 font-bold">0.00</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="text-xs text-gray-400 mt-3">Values are fractions of syntactically usable outputs (HTML parse success / Markdown render success / LaTeX compilation success) from HTML image renders.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════ CONTRIBUTIONS ══════════════════════════ -->
+  <section class="section py-6">
+    <h2 class="text-xl font-semibold">Contributions</h2>
+    <ul class="mt-3 list-disc pl-6 space-y-2 text-gray-700 text-[15.5px]">
+      <li><strong>Controlled evaluation formulation</strong> — we formulate cross-format and cross-modality table understanding as a controlled problem where table content is fixed while structural format and input modality vary under matched pipelines.</li>
+      <li><strong>TABVERSE benchmark</strong> — aligned multimodal table benchmark with HTML, LaTeX, and Markdown representations, corresponding rendered images, category and difficulty tags, and a 700-sample balanced evaluation set from five TableQA sources.</li>
+      <li><strong>Three complementary tasks</strong> — QA, SUC (10 structural subtasks), and SR (reconstruction + usability) across LLM-Text, VLM-Image, and VLM-Text pipelines on 17 models.</li>
+      <li><strong>Representation insights</strong> — HTML is often the most robust text format; modality effects are model-dependent; LaTeX reconstruction and row-level understanding remain hard challenges even for proprietary models.</li>
+    </ul>
+  </section>
+
+  <!-- ══════════════════════════ CITATION ══════════════════════════ -->
+  <section id="citation" class="section py-8">
+    <h2 class="text-xl font-semibold">Citation</h2>
+    <p class="mt-3 text-gray-700 text-[15.5px]">If you find TABVERSE useful in your research, please cite:</p>
+    <code id="bibtex" class="bib mt-4">@article{tabverse2026,
+  title     = {{TABVERSE}: Benchmarking Cross-Format Table Understanding in {LLMs} and {VLMs}},
+  author    = {Anonymous},
+  journal   = {arXiv preprint},
+  year      = {2026},
+  url       = {http://anonymous.for.review}
+}</code>
+  </section>
+
+  <!-- ══════════════════════════ FOOTER ══════════════════════════ -->
+  <footer class="section py-10 text-center text-sm text-gray-500">
+    <div class="flex items-center justify-center gap-4 flex-wrap">
+      <a class="underline" href="./assets/dataset.pdf" target="_blank">Paper</a>
+      <a class="underline" href="http://anonymous.for.review" target="_blank">GitHub</a>
+      <a class="underline" href="http://anonymous.for.review" target="_blank">Dataset</a>
+      <a class="underline" href="./leaderboard.html">Leaderboard</a>
+    </div>
+    <p class="mt-3">&copy; <span id="year"></span> The Authors &mdash; MBZUAI &amp; SUTD. Submitted to ACL ARR May 2026.</p>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById('copy-bib').addEventListener('click', async () => {
+      const txt = document.getElementById('bibtex').innerText.trim();
+      try { await navigator.clipboard.writeText(txt); alert('BibTeX copied to clipboard!'); } catch (e) { console.error(e); }
+    });
+  </script>
+</body>
+</html>

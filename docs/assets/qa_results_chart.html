@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: transparent; padding: 16px 20px 10px; }
+  .title    { font-size: 14px; font-weight: 800; color: #1e293b; text-align: center; margin-bottom: 3px; }
+  .subtitle { font-size: 11px; color: #64748b; text-align: center; margin-bottom: 14px; }
+
+  .legend { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .leg { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #374151; }
+  .swatch { width: 13px; height: 13px; border-radius: 3px; flex-shrink: 0; }
+
+  table { width: 100%; border-collapse: separate; border-spacing: 0 5px; }
+  thead th { font-size: 10.5px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: .04em; padding: 0 6px 6px; text-align: left; }
+  thead th:not(:first-child) { text-align: center; }
+  tbody tr { }
+  .model-cell { font-size: 11.5px; font-weight: 600; color: #1e293b; padding: 0 6px; width: 170px; white-space: nowrap; }
+  .type-badge { display: inline-block; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 8px; margin-left: 4px; vertical-align: middle; }
+  .type-vlm { background: #ede9fe; color: #5b21b6; }
+  .type-llm { background: #e0f2fe; color: #0c4a6e; }
+  .type-prop { background: #fef3c7; color: #78350f; }
+
+  .bar-cell { padding: 0 4px; }
+  .bar-row-wrap { display: flex; align-items: center; gap: 0; height: 24px; }
+  .mini-bar { height: 18px; border-radius: 3px; min-width: 2px; display: inline-flex; align-items: center; }
+  .mini-val { font-size: 10px; font-weight: 600; margin-left: 4px; white-space: nowrap; }
+  .divider { height: 1px; background: #f1f5f9; margin: 2px 0; }
+
+  .section-header { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .06em; padding: 4px 6px 0; }
+</style>
+</head>
+<body>
+<div class="title">TaskQA Results — Exact-Match Accuracy (%)</div>
+<div class="subtitle">Average over HTML, LaTeX, and Markdown representations · 700 questions</div>
+
+<div class="legend">
+  <div class="leg"><div class="swatch" style="background:#4f86c6;"></div> VLM-Image (avg)</div>
+  <div class="leg"><div class="swatch" style="background:#f59e0b;"></div> VLM-Text (avg)</div>
+  <div class="leg"><div class="swatch" style="background:#10b981;"></div> LLM-Text (avg)</div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Model</th>
+      <th style="width:220px;">Image avg</th>
+      <th style="width:220px;">Text avg</th>
+    </tr>
+  </thead>
+  <tbody id="tbody"></tbody>
+</table>
+
+<div style="margin-top:8px;font-size:10px;color:#94a3b8;text-align:center;">Bar width proportional to accuracy · max = 70%</div>
+
+<script>
+const MAX_W = 200; // px for 100% accuracy (scaled)
+const SCALE = MAX_W / 70;  // 70% → full bar
+
+const models = [
+  // Proprietary
+  { name: "Gemini-3-Flash",    type: "prop", img: 65.33, txt: 65.38 },
+  { name: "GPT-5.2",           type: "prop", img: 55.08, txt: 57.57 },
+  // Open VLMs
+  { name: "Qwen3-VL-8B",       type: "vlm",  img: 49.76, txt: 52.95 },
+  { name: "Qwen3-VL-30B-A3B",  type: "vlm",  img: 41.57, txt: 42.86 },
+  { name: "Gemma-3-27B",       type: "vlm",  img: 45.62, txt: 52.62 },
+  { name: "Gemma-3-12B",       type: "vlm",  img: 39.00, txt: 49.29 },
+  { name: "InternVL3.5-14B",   type: "vlm",  img: 48.24, txt: 46.43 },
+  { name: "InternVL3.5-30B",   type: "vlm",  img: 48.72, txt: 46.19 },
+  { name: "Ministral-3-14B",   type: "vlm",  img: 42.09, txt: 37.33 },
+  { name: "SmolVLM2-2.2B",     type: "vlm",  img: 28.09, txt: 18.32 },
+  // Text LLMs
+  { name: "Qwen3-30B-A3B",     type: "llm",  img: null,  txt: 48.71 },
+  { name: "Qwen2.5-7B",        type: "llm",  img: null,  txt: 44.24 },
+  { name: "TableGPT2-7B",      type: "llm",  img: null,  txt: 42.71 },
+];
+
+const typeLabel = { vlm: "VLM", llm: "LLM", prop: "Prop." };
+const typeCls   = { vlm: "type-vlm", llm: "type-llm", prop: "type-prop" };
+const IMG_COLOR = "#4f86c6";
+const TXT_COLOR = { vlm: "#f59e0b", llm: "#10b981", prop: "#f59e0b" };
+
+const tbody = document.getElementById('tbody');
+models.forEach(m => {
+  const tr = document.createElement('tr');
+
+  const tdModel = document.createElement('td');
+  tdModel.className = 'model-cell';
+  tdModel.innerHTML = m.name + `<span class="type-badge ${typeCls[m.type]}">${typeLabel[m.type]}</span>`;
+
+  const tdImg = document.createElement('td');
+  tdImg.className = 'bar-cell';
+  if (m.img !== null) {
+    const w = Math.round(m.img * SCALE);
+    tdImg.innerHTML = `<div class="bar-row-wrap">
+      <div class="mini-bar" style="width:${w}px;background:${IMG_COLOR};"></div>
+      <span class="mini-val" style="color:#1e3a8a;">${m.img.toFixed(1)}</span>
+    </div>`;
+  } else {
+    tdImg.innerHTML = `<div style="font-size:10.5px;color:#d1d5db;padding-left:6px;">text-only model</div>`;
+  }
+
+  const txtColor = TXT_COLOR[m.type];
+  const wt = Math.round(m.txt * SCALE);
+  const tdTxt = document.createElement('td');
+  tdTxt.className = 'bar-cell';
+  tdTxt.innerHTML = `<div class="bar-row-wrap">
+    <div class="mini-bar" style="width:${wt}px;background:${txtColor};"></div>
+    <span class="mini-val" style="color:#713f12;">${m.txt.toFixed(1)}</span>
+  </div>`;
+
+  tr.appendChild(tdModel);
+  tr.appendChild(tdImg);
+  tr.appendChild(tdTxt);
+  tbody.appendChild(tr);
+
+  // divider after proprietary section
+  if (m.name === "GPT-5.2") {
+    const divRow = document.createElement('tr');
+    divRow.innerHTML = '<td colspan="3"><div class="divider"></div></td>';
+    tbody.appendChild(divRow);
+  }
+  if (m.name === "SmolVLM2-2.2B") {
+    const divRow = document.createElement('tr');
+    divRow.innerHTML = '<td colspan="3"><div class="divider"></div></td>';
+    tbody.appendChild(divRow);
+  }
+});
+</script>
+</body>
+</html>

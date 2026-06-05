@@ -1,0 +1,218 @@
+pipeline,model,question_category,html_acc,latex_acc,markdown_acc,avg_acc
+VLM,InternVL3.5-14B,Aggregation / Counting / Arithmetic,28.00,33.00,27.00,29.33
+VLM,InternVL3.5-14B,Comparison & Extremum,57.00,57.00,57.00,57.00
+VLM,InternVL3.5-14B,Conditional Lookup,37.00,38.00,33.00,36.00
+VLM,InternVL3.5-14B,Multi-Item Lookup,26.00,23.00,27.00,25.33
+VLM,InternVL3.5-14B,Multi-hop Binary Verification,64.00,67.00,63.00,64.67
+VLM,InternVL3.5-14B,Simple Lookup,52.00,48.00,49.00,49.67
+VLM,InternVL3.5-14B,Single-step Binary Verification,76.00,71.00,80.00,75.67
+VLM,InternVL3.5-30B-A3B,Aggregation / Counting / Arithmetic,32.00,30.00,37.00,33.00
+VLM,InternVL3.5-30B-A3B,Comparison & Extremum,49.00,58.00,51.00,52.67
+VLM,InternVL3.5-30B-A3B,Conditional Lookup,37.00,37.00,39.00,37.67
+VLM,InternVL3.5-30B-A3B,Multi-Item Lookup,22.00,18.00,15.00,18.33
+VLM,InternVL3.5-30B-A3B,Multi-hop Binary Verification,69.00,79.00,74.00,74.00
+VLM,InternVL3.5-30B-A3B,Simple Lookup,52.00,53.00,50.00,51.67
+VLM,InternVL3.5-30B-A3B,Single-step Binary Verification,74.00,75.00,72.00,73.67
+VLM,Qwen3-VL-30B-A3B-Instruct,Aggregation / Counting / Arithmetic,23.00,20.00,21.00,21.33
+VLM,Qwen3-VL-30B-A3B-Instruct,Comparison & Extremum,54.00,54.00,48.00,52.00
+VLM,Qwen3-VL-30B-A3B-Instruct,Conditional Lookup,22.00,28.00,21.00,23.67
+VLM,Qwen3-VL-30B-A3B-Instruct,Multi-Item Lookup,21.00,24.00,26.00,23.67
+VLM,Qwen3-VL-30B-A3B-Instruct,Multi-hop Binary Verification,56.00,58.00,56.00,56.67
+VLM,Qwen3-VL-30B-A3B-Instruct,Simple Lookup,48.00,48.00,50.00,48.67
+VLM,Qwen3-VL-30B-A3B-Instruct,Single-step Binary Verification,64.00,63.00,68.00,65.00
+VLM,Qwen3-VL-8B-Instruct,Aggregation / Counting / Arithmetic,33.00,32.00,30.00,31.67
+VLM,Qwen3-VL-8B-Instruct,Comparison & Extremum,45.00,50.00,49.00,48.00
+VLM,Qwen3-VL-8B-Instruct,Conditional Lookup,35.00,38.00,33.00,35.33
+VLM,Qwen3-VL-8B-Instruct,Multi-Item Lookup,39.00,35.00,38.00,37.33
+VLM,Qwen3-VL-8B-Instruct,Multi-hop Binary Verification,69.00,66.00,69.00,68.00
+VLM,Qwen3-VL-8B-Instruct,Simple Lookup,59.00,57.00,58.00,58.00
+VLM,Qwen3-VL-8B-Instruct,Single-step Binary Verification,72.00,67.00,71.00,70.00
+VLM,Qwen3.5-27B,Aggregation / Counting / Arithmetic,,,,
+VLM,Qwen3.5-27B,Comparison & Extremum,,,,
+VLM,Qwen3.5-27B,Conditional Lookup,,,,
+VLM,Qwen3.5-27B,Multi-Item Lookup,,,,
+VLM,Qwen3.5-27B,Multi-hop Binary Verification,,,,
+VLM,Qwen3.5-27B,Simple Lookup,,,,
+VLM,Qwen3.5-27B,Single-step Binary Verification,,,,
+VLM,SmolVLM2-2.2B-Instruct,Aggregation / Counting / Arithmetic,19.00,15.00,18.00,17.33
+VLM,SmolVLM2-2.2B-Instruct,Comparison & Extremum,22.00,27.00,28.00,25.67
+VLM,SmolVLM2-2.2B-Instruct,Conditional Lookup,23.00,21.00,17.00,20.33
+VLM,SmolVLM2-2.2B-Instruct,Multi-Item Lookup,15.00,18.00,5.00,12.67
+VLM,SmolVLM2-2.2B-Instruct,Multi-hop Binary Verification,45.00,44.00,42.00,43.67
+VLM,SmolVLM2-2.2B-Instruct,Simple Lookup,44.00,37.00,34.00,38.33
+VLM,SmolVLM2-2.2B-Instruct,Single-step Binary Verification,40.00,39.00,37.00,38.67
+VLM,gemini-3-flash-preview,Aggregation / Counting / Arithmetic,63.00,62.63,64.00,63.21
+VLM,gemini-3-flash-preview,Comparison & Extremum,72.00,72.00,72.00,72.00
+VLM,gemini-3-flash-preview,Conditional Lookup,74.00,75.00,75.00,74.67
+VLM,gemini-3-flash-preview,Multi-Item Lookup,50.00,49.00,50.00,49.67
+VLM,gemini-3-flash-preview,Multi-hop Binary Verification,65.00,67.00,66.00,66.00
+VLM,gemini-3-flash-preview,Simple Lookup,67.00,64.29,68.00,66.43
+VLM,gemini-3-flash-preview,Single-step Binary Verification,67.00,66.00,63.00,65.33
+VLM,gemma_3-12B-IT,Aggregation / Counting / Arithmetic,24.00,25.00,23.00,24.00
+VLM,gemma_3-12B-IT,Comparison & Extremum,35.00,35.00,36.00,35.33
+VLM,gemma_3-12B-IT,Conditional Lookup,27.00,19.00,26.00,24.00
+VLM,gemma_3-12B-IT,Multi-Item Lookup,17.00,19.00,17.00,17.67
+VLM,gemma_3-12B-IT,Multi-hop Binary Verification,65.00,66.00,66.00,65.67
+VLM,gemma_3-12B-IT,Simple Lookup,44.00,43.00,41.00,42.67
+VLM,gemma_3-12B-IT,Single-step Binary Verification,60.00,70.00,61.00,63.67
+VLM,gemma_3-27B-IT,Aggregation / Counting / Arithmetic,27.00,32.00,28.00,29.00
+VLM,gemma_3-27B-IT,Comparison & Extremum,42.00,36.00,39.00,39.00
+VLM,gemma_3-27B-IT,Conditional Lookup,28.00,33.00,34.00,31.67
+VLM,gemma_3-27B-IT,Multi-Item Lookup,27.00,23.00,29.00,26.33
+VLM,gemma_3-27B-IT,Multi-hop Binary Verification,73.00,68.00,75.00,72.00
+VLM,gemma_3-27B-IT,Simple Lookup,53.00,53.00,45.00,50.33
+VLM,gemma_3-27B-IT,Single-step Binary Verification,73.00,72.00,68.00,71.00
+VLM,gpt-5.2,Aggregation / Counting / Arithmetic,58.00,61.62,60.00,59.87
+VLM,gpt-5.2,Comparison & Extremum,67.00,63.00,67.00,65.67
+VLM,gpt-5.2,Conditional Lookup,52.00,54.00,53.00,53.00
+VLM,gpt-5.2,Multi-Item Lookup,40.00,39.00,42.00,40.33
+VLM,gpt-5.2,Multi-hop Binary Verification,52.00,54.00,58.00,54.67
+VLM,gpt-5.2,Simple Lookup,56.00,52.04,57.00,55.01
+VLM,gpt-5.2,Single-step Binary Verification,57.00,58.00,56.00,57.00
+VLM,llava_1.6-vicuna-13B,Aggregation / Counting / Arithmetic,11.00,11.00,10.00,10.67
+VLM,llava_1.6-vicuna-13B,Comparison & Extremum,23.00,22.00,24.00,23.00
+VLM,llava_1.6-vicuna-13B,Conditional Lookup,12.00,15.00,13.00,13.33
+VLM,llava_1.6-vicuna-13B,Multi-Item Lookup,2.00,2.00,2.00,2.00
+VLM,llava_1.6-vicuna-13B,Multi-hop Binary Verification,49.00,45.00,47.00,47.00
+VLM,llava_1.6-vicuna-13B,Simple Lookup,32.00,26.00,30.00,29.33
+VLM,llava_1.6-vicuna-13B,Single-step Binary Verification,47.00,45.00,49.00,47.00
+VLM,llava_1.6-vicuna-7B,Aggregation / Counting / Arithmetic,11.00,9.00,9.00,9.67
+VLM,llava_1.6-vicuna-7B,Comparison & Extremum,16.00,16.00,18.00,16.67
+VLM,llava_1.6-vicuna-7B,Conditional Lookup,11.00,11.00,10.00,10.67
+VLM,llava_1.6-vicuna-7B,Multi-Item Lookup,2.00,2.00,1.00,1.67
+VLM,llava_1.6-vicuna-7B,Multi-hop Binary Verification,77.00,79.00,78.00,78.00
+VLM,llava_1.6-vicuna-7B,Simple Lookup,28.00,24.00,28.00,26.67
+VLM,llava_1.6-vicuna-7B,Single-step Binary Verification,78.00,79.00,80.00,79.00
+VLM,ministral_3-14B-Instruct,Aggregation / Counting / Arithmetic,27.00,27.00,32.00,28.67
+VLM,ministral_3-14B-Instruct,Comparison & Extremum,53.00,48.00,53.00,51.33
+VLM,ministral_3-14B-Instruct,Conditional Lookup,46.00,37.00,37.00,40.00
+VLM,ministral_3-14B-Instruct,Multi-Item Lookup,21.00,18.00,19.00,19.33
+VLM,ministral_3-14B-Instruct,Multi-hop Binary Verification,57.00,54.00,55.00,55.33
+VLM,ministral_3-14B-Instruct,Simple Lookup,50.00,41.00,45.00,45.33
+VLM,ministral_3-14B-Instruct,Single-step Binary Verification,57.00,49.00,58.00,54.67
+VLM,table-llava-v1.5-7b-hf,Aggregation / Counting / Arithmetic,1.00,1.00,4.00,2.00
+VLM,table-llava-v1.5-7b-hf,Comparison & Extremum,4.00,1.00,9.00,4.67
+VLM,table-llava-v1.5-7b-hf,Conditional Lookup,0.00,0.00,3.00,1.00
+VLM,table-llava-v1.5-7b-hf,Multi-Item Lookup,0.00,0.00,0.00,0.00
+VLM,table-llava-v1.5-7b-hf,Multi-hop Binary Verification,0.00,0.00,3.00,1.00
+VLM,table-llava-v1.5-7b-hf,Simple Lookup,1.00,2.00,3.00,2.00
+VLM,table-llava-v1.5-7b-hf,Single-step Binary Verification,3.00,3.00,6.00,4.00
+VLM-TEXT,InternVL3.5-14B,Aggregation / Counting / Arithmetic,40.00,38.00,36.00,38.00
+VLM-TEXT,InternVL3.5-14B,Comparison & Extremum,48.00,40.00,48.00,45.33
+VLM-TEXT,InternVL3.5-14B,Conditional Lookup,38.00,35.00,36.00,36.33
+VLM-TEXT,InternVL3.5-14B,Multi-Item Lookup,15.00,28.00,6.00,16.33
+VLM-TEXT,InternVL3.5-14B,Multi-hop Binary Verification,66.00,66.00,59.00,63.67
+VLM-TEXT,InternVL3.5-14B,Simple Lookup,55.00,49.00,59.00,54.33
+VLM-TEXT,InternVL3.5-14B,Single-step Binary Verification,62.00,65.00,66.00,64.33
+VLM-TEXT,InternVL3.5-30B-A3B,Aggregation / Counting / Arithmetic,42.00,41.00,43.00,42.00
+VLM-TEXT,InternVL3.5-30B-A3B,Comparison & Extremum,47.00,45.00,50.00,47.33
+VLM-TEXT,InternVL3.5-30B-A3B,Conditional Lookup,35.00,31.00,30.00,32.00
+VLM-TEXT,InternVL3.5-30B-A3B,Multi-Item Lookup,9.00,26.00,13.00,16.00
+VLM-TEXT,InternVL3.5-30B-A3B,Multi-hop Binary Verification,65.00,68.00,72.00,68.33
+VLM-TEXT,InternVL3.5-30B-A3B,Simple Lookup,51.00,39.00,47.00,45.67
+VLM-TEXT,InternVL3.5-30B-A3B,Single-step Binary Verification,72.00,68.00,74.00,71.33
+VLM-TEXT,Qwen3-VL-30B-A3B-Instruct,Aggregation / Counting / Arithmetic,32.00,22.00,26.00,26.67
+VLM-TEXT,Qwen3-VL-30B-A3B-Instruct,Comparison & Extremum,50.00,49.00,43.00,47.33
+VLM-TEXT,Qwen3-VL-30B-A3B-Instruct,Conditional Lookup,30.00,29.00,19.00,26.00
+VLM-TEXT,Qwen3-VL-30B-A3B-Instruct,Multi-Item Lookup,25.00,24.00,18.00,22.33
+VLM-TEXT,Qwen3-VL-30B-A3B-Instruct,Multi-hop Binary Verification,72.00,71.00,76.00,73.00
+VLM-TEXT,Qwen3-VL-30B-A3B-Instruct,Simple Lookup,36.00,36.00,24.00,32.00
+VLM-TEXT,Qwen3-VL-30B-A3B-Instruct,Single-step Binary Verification,72.00,74.00,72.00,72.67
+VLM-TEXT,Qwen3-VL-8B-Instruct,Aggregation / Counting / Arithmetic,38.00,36.00,37.00,37.00
+VLM-TEXT,Qwen3-VL-8B-Instruct,Comparison & Extremum,48.00,50.00,49.00,49.00
+VLM-TEXT,Qwen3-VL-8B-Instruct,Conditional Lookup,33.00,32.00,34.00,33.00
+VLM-TEXT,Qwen3-VL-8B-Instruct,Multi-Item Lookup,47.00,45.00,44.00,45.33
+VLM-TEXT,Qwen3-VL-8B-Instruct,Multi-hop Binary Verification,74.00,75.00,75.00,74.67
+VLM-TEXT,Qwen3-VL-8B-Instruct,Simple Lookup,60.00,55.00,59.00,58.00
+VLM-TEXT,Qwen3-VL-8B-Instruct,Single-step Binary Verification,74.00,72.00,75.00,73.67
+VLM-TEXT,SmolVLM2-2.2B-Instruct,Aggregation / Counting / Arithmetic,2.04,1.02,1.02,1.36
+VLM-TEXT,SmolVLM2-2.2B-Instruct,Comparison & Extremum,2.00,1.00,3.00,2.00
+VLM-TEXT,SmolVLM2-2.2B-Instruct,Conditional Lookup,0.00,0.00,0.00,0.00
+VLM-TEXT,SmolVLM2-2.2B-Instruct,Multi-Item Lookup,0.00,0.00,0.00,0.00
+VLM-TEXT,SmolVLM2-2.2B-Instruct,Multi-hop Binary Verification,70.71,55.00,49.00,58.24
+VLM-TEXT,SmolVLM2-2.2B-Instruct,Simple Lookup,2.20,1.05,1.05,1.43
+VLM-TEXT,SmolVLM2-2.2B-Instruct,Single-step Binary Verification,72.73,64.65,55.56,64.31
+VLM-TEXT,gemini-3-flash-preview,Aggregation / Counting / Arithmetic,63.00,64.00,64.00,63.67
+VLM-TEXT,gemini-3-flash-preview,Comparison & Extremum,72.00,69.00,72.00,71.00
+VLM-TEXT,gemini-3-flash-preview,Conditional Lookup,77.00,76.00,73.00,75.33
+VLM-TEXT,gemini-3-flash-preview,Multi-Item Lookup,49.00,45.00,48.00,47.33
+VLM-TEXT,gemini-3-flash-preview,Multi-hop Binary Verification,65.00,65.00,67.00,65.67
+VLM-TEXT,gemini-3-flash-preview,Simple Lookup,68.00,67.00,66.00,67.00
+VLM-TEXT,gemini-3-flash-preview,Single-step Binary Verification,66.00,69.00,68.00,67.67
+VLM-TEXT,gemma_3-12B-IT,Aggregation / Counting / Arithmetic,29.00,26.00,23.00,26.00
+VLM-TEXT,gemma_3-12B-IT,Comparison & Extremum,45.00,44.00,45.00,44.67
+VLM-TEXT,gemma_3-12B-IT,Conditional Lookup,36.00,36.00,36.00,36.00
+VLM-TEXT,gemma_3-12B-IT,Multi-Item Lookup,43.00,39.00,40.00,40.67
+VLM-TEXT,gemma_3-12B-IT,Multi-hop Binary Verification,70.00,73.00,70.00,71.00
+VLM-TEXT,gemma_3-12B-IT,Simple Lookup,60.00,54.00,60.00,58.00
+VLM-TEXT,gemma_3-12B-IT,Single-step Binary Verification,69.00,71.00,66.00,68.67
+VLM-TEXT,gemma_3-27B-IT,Aggregation / Counting / Arithmetic,38.00,36.00,37.00,37.00
+VLM-TEXT,gemma_3-27B-IT,Comparison & Extremum,51.00,49.00,48.00,49.33
+VLM-TEXT,gemma_3-27B-IT,Conditional Lookup,42.00,39.00,40.00,40.33
+VLM-TEXT,gemma_3-27B-IT,Multi-Item Lookup,41.00,41.00,40.00,40.67
+VLM-TEXT,gemma_3-27B-IT,Multi-hop Binary Verification,77.00,72.00,79.00,76.00
+VLM-TEXT,gemma_3-27B-IT,Simple Lookup,57.00,55.00,59.00,57.00
+VLM-TEXT,gemma_3-27B-IT,Single-step Binary Verification,68.00,67.00,69.00,68.00
+VLM-TEXT,gpt-5.2,Aggregation / Counting / Arithmetic,61.00,61.00,63.00,61.67
+VLM-TEXT,gpt-5.2,Comparison & Extremum,67.00,68.00,71.00,68.67
+VLM-TEXT,gpt-5.2,Conditional Lookup,47.00,43.00,50.00,46.67
+VLM-TEXT,gpt-5.2,Multi-Item Lookup,44.00,45.00,43.00,44.00
+VLM-TEXT,gpt-5.2,Multi-hop Binary Verification,56.00,60.00,56.00,57.33
+VLM-TEXT,gpt-5.2,Simple Lookup,63.00,61.00,63.00,62.33
+VLM-TEXT,gpt-5.2,Single-step Binary Verification,64.00,63.00,60.00,62.33
+VLM-TEXT,llava_1.6-vicuna-13B,Aggregation / Counting / Arithmetic,9.30,4.08,1.03,4.80
+VLM-TEXT,llava_1.6-vicuna-13B,Comparison & Extremum,14.14,9.00,10.00,11.05
+VLM-TEXT,llava_1.6-vicuna-13B,Conditional Lookup,6.06,6.00,6.00,6.02
+VLM-TEXT,llava_1.6-vicuna-13B,Multi-Item Lookup,1.01,3.03,4.04,2.69
+VLM-TEXT,llava_1.6-vicuna-13B,Multi-hop Binary Verification,67.01,61.62,74.75,67.79
+VLM-TEXT,llava_1.6-vicuna-13B,Simple Lookup,6.82,11.96,6.74,8.51
+VLM-TEXT,llava_1.6-vicuna-13B,Single-step Binary Verification,60.82,58.59,69.70,63.04
+VLM-TEXT,llava_1.6-vicuna-7B,Aggregation / Counting / Arithmetic,4.65,10.20,6.19,7.01
+VLM-TEXT,llava_1.6-vicuna-7B,Comparison & Extremum,14.14,16.00,14.00,14.71
+VLM-TEXT,llava_1.6-vicuna-7B,Conditional Lookup,1.01,7.00,3.00,3.67
+VLM-TEXT,llava_1.6-vicuna-7B,Multi-Item Lookup,4.04,7.07,5.05,5.39
+VLM-TEXT,llava_1.6-vicuna-7B,Multi-hop Binary Verification,78.35,77.78,75.76,77.30
+VLM-TEXT,llava_1.6-vicuna-7B,Simple Lookup,9.09,11.96,6.74,9.26
+VLM-TEXT,llava_1.6-vicuna-7B,Single-step Binary Verification,77.32,75.76,72.73,75.27
+VLM-TEXT,ministral_3-14B-Instruct,Aggregation / Counting / Arithmetic,25.00,19.00,24.00,22.67
+VLM-TEXT,ministral_3-14B-Instruct,Comparison & Extremum,52.00,45.00,42.00,46.33
+VLM-TEXT,ministral_3-14B-Instruct,Conditional Lookup,36.00,29.00,36.00,33.67
+VLM-TEXT,ministral_3-14B-Instruct,Multi-Item Lookup,14.00,9.00,18.00,13.67
+VLM-TEXT,ministral_3-14B-Instruct,Multi-hop Binary Verification,46.00,48.00,44.00,46.00
+VLM-TEXT,ministral_3-14B-Instruct,Simple Lookup,54.00,47.00,51.00,50.67
+VLM-TEXT,ministral_3-14B-Instruct,Single-step Binary Verification,53.00,51.00,41.00,48.33
+VLM-TEXT,table-llava-v1.5-7b-hf,Aggregation / Counting / Arithmetic,8.14,10.20,13.40,10.58
+VLM-TEXT,table-llava-v1.5-7b-hf,Comparison & Extremum,6.06,14.00,14.00,11.35
+VLM-TEXT,table-llava-v1.5-7b-hf,Conditional Lookup,4.04,11.00,7.00,7.35
+VLM-TEXT,table-llava-v1.5-7b-hf,Multi-Item Lookup,4.04,13.13,15.15,10.77
+VLM-TEXT,table-llava-v1.5-7b-hf,Multi-hop Binary Verification,62.89,62.63,66.67,64.06
+VLM-TEXT,table-llava-v1.5-7b-hf,Simple Lookup,14.77,20.65,16.85,17.42
+VLM-TEXT,table-llava-v1.5-7b-hf,Single-step Binary Verification,63.92,59.60,64.65,62.72
+LLM,Qwen2.5-7B-Instruct,Aggregation / Counting / Arithmetic,27.00,25.00,28.00,26.67
+LLM,Qwen2.5-7B-Instruct,Comparison & Extremum,47.00,42.00,40.00,43.00
+LLM,Qwen2.5-7B-Instruct,Conditional Lookup,34.00,31.00,33.00,32.67
+LLM,Qwen2.5-7B-Instruct,Multi-Item Lookup,37.00,38.00,36.00,37.00
+LLM,Qwen2.5-7B-Instruct,Multi-hop Binary Verification,57.00,56.00,61.00,58.00
+LLM,Qwen2.5-7B-Instruct,Simple Lookup,54.00,50.00,54.00,52.67
+LLM,Qwen2.5-7B-Instruct,Single-step Binary Verification,56.00,57.00,66.00,59.67
+LLM,Qwen3-30B-A3B-Instruct-2507,Aggregation / Counting / Arithmetic,29.00,30.00,30.00,29.67
+LLM,Qwen3-30B-A3B-Instruct-2507,Comparison & Extremum,50.00,46.00,41.00,45.67
+LLM,Qwen3-30B-A3B-Instruct-2507,Conditional Lookup,34.00,29.00,26.00,29.67
+LLM,Qwen3-30B-A3B-Instruct-2507,Multi-Item Lookup,36.00,31.00,30.00,32.33
+LLM,Qwen3-30B-A3B-Instruct-2507,Multi-hop Binary Verification,80.00,78.00,78.00,78.67
+LLM,Qwen3-30B-A3B-Instruct-2507,Simple Lookup,52.00,47.00,45.00,48.00
+LLM,Qwen3-30B-A3B-Instruct-2507,Single-step Binary Verification,77.00,78.00,76.00,77.00
+LLM,TAMA-QWen3,Aggregation / Counting / Arithmetic,2.00,2.00,2.00,2.00
+LLM,TAMA-QWen3,Comparison & Extremum,0.00,0.00,0.00,0.00
+LLM,TAMA-QWen3,Conditional Lookup,0.00,0.00,0.00,0.00
+LLM,TAMA-QWen3,Multi-Item Lookup,0.00,0.00,0.00,0.00
+LLM,TAMA-QWen3,Multi-hop Binary Verification,73.00,72.00,74.00,73.00
+LLM,TAMA-QWen3,Simple Lookup,1.00,1.00,1.00,1.00
+LLM,TAMA-QWen3,Single-step Binary Verification,72.00,73.00,71.00,72.00
+LLM,TableGPT2-7B,Aggregation / Counting / Arithmetic,25.00,18.00,22.00,21.67
+LLM,TableGPT2-7B,Comparison & Extremum,33.00,33.00,33.00,33.00
+LLM,TableGPT2-7B,Conditional Lookup,29.00,29.00,25.00,27.67
+LLM,TableGPT2-7B,Multi-Item Lookup,34.00,28.00,30.00,30.67
+LLM,TableGPT2-7B,Multi-hop Binary Verification,72.00,71.00,75.00,72.67
+LLM,TableGPT2-7B,Simple Lookup,45.00,40.00,35.00,40.00
+LLM,TableGPT2-7B,Single-step Binary Verification,73.00,72.00,75.00,73.33

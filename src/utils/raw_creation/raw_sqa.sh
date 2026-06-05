@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="/Users/mominaahsan/Desktop/VisualTableBench"
+OUT="${ROOT}/data_full/1-raw/sqa.jsonl"
+
+python - <<'PY'
+import json
+from datasets import load_dataset
+
+ROOT="/Users/mominaahsan/Desktop/VisualTableBench"
+OUT=f"{ROOT}/data_full/1-raw/sqa.jsonl"
+
+# Uses your local dataset script (scripts/dataset_collection/sqa.py)
+# Use split="test" to avoid leakage (as you decided earlier).
+ds = load_dataset(
+    f"{ROOT}/scripts/dataset_collection/sqa.py",
+    split="test",
+)
+
+print("[INFO] Loaded SQA test samples:", len(ds))
+
+with open(OUT, "w", encoding="utf-8") as f:
+    for ex in ds:
+        out = {
+            "table": {
+                "header": ex["table_header"],
+                "rows": ex["table_data"],
+            },
+            "query": ex["question"],
+            "label": ex["answer_text"],      # SQA answers are lists; keep as-is
+            "table_file": ex.get("table_file", ""),
+        }
+        f.write(json.dumps(out, ensure_ascii=False) + "\n")
+
+print("[OK] Wrote:", OUT)
+PY
