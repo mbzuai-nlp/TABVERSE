@@ -19,7 +19,6 @@ src/a.py
 .DS_Store
 Thumbs.db
 
-
 # Ignore virtual environments
 .venv/
 env/

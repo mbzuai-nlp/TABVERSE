@@ -1,0 +1,18 @@
+| Club                   | Last Leagues Cup qualification      | Length of drought   |
+|:-----------------------|:------------------------------------|:--------------------|
+| Atlanta United FC      | never ( Leagues Cup began in 2019 ) | 2 seasons           |
+| Colorado Rapids        | never ( Leagues Cup began in 2019 ) | 2 seasons           |
+| Columbus Crew SC       | never ( Leagues Cup began in 2019 ) | 2 seasons           |
+| FC Cincinnati          | never ( Leagues Cup began in 2019 ) | 2 seasons           |
+| FC Dallas              | never ( Leagues Cup began in 2019 ) | 2 seasons           |
+| Los Angeles FC         | never ( Leagues Cup began in 2019 ) | 2 seasons           |
+| Montreal Impact        | never ( Leagues Cup began in 2019 ) | 2 seasons           |
+| New England Revolution | never ( Leagues Cup began in 2019 ) | 2 seasons           |
+| New York City FC       | never ( Leagues Cup began in 2019 ) | 2 seasons           |
+| Orlando City SC        | never ( Leagues Cup began in 2019 ) | 2 seasons           |
+| San Jose Earthquakes   | never ( Leagues Cup began in 2019 ) | 2 seasons           |
+| Seattle Sounders FC    | never ( Leagues Cup began in 2019 ) | 2 seasons           |
+| Sporting Kansas City   | never ( Leagues Cup began in 2019 ) | 2 seasons           |
+| Vancouver Whitecaps FC | never ( Leagues Cup began in 2019 ) | 2 seasons           |
+| Chicago Fire           | 2019                                | 1 season            |
+| Houston Dynamo         | 2019                                | 1 season            |

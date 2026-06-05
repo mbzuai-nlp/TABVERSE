@@ -1,0 +1,12 @@
+| Name                 | Status                                                                                                                     | Details                                           |
+|:---------------------|:---------------------------------------------------------------------------------------------------------------------------|:--------------------------------------------------|
+| Chad Butler          | Transferred to Huntsville from the Terrell Unit in Brazoria County , Texas on the week of his release from the TDCJ system | Known as Pimp C , a rapper                        |
+| Fred Carrasco        | Committed suicide                                                                                                          | Perpetrator of the 1974 Huntsville Prison Siege   |
+| Henry Ray Clark      | Released , now deceased                                                                                                    | Artist known as The Magnificent Pretty Boy        |
+| Ignacio Cuevas       | Executed                                                                                                                   | Perpetrator of the 1974 Huntsville Prison Siege   |
+| Duane 'DOG ' Chapman | Served 18 months for a murder in 1977                                                                                      | Star of the television show Dog the Bounty Hunter |
+| Jack Purvis          | Committed a robbery in El Paso , Texas                                                                                     | Musician                                          |
+| John Wesley Hardin   | Served from September 28 , 1878 , to March 16 , 1894                                                                       | Outlaw and gunfighter of the American Old West    |
+| Satanta              | Committed suicide in the prison                                                                                            | A Kiowa war chief                                 |
+| Carlos Coy           | Eligible for parole on October 7 , 2024 ; projected release date April 8 , 2047                                            | Known as SPM ( South Park Mexican ) , a rapper    |
+| Juan Segundo         | Serial Killer on death row                                                                                                 |                                                   |

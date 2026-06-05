@@ -1,0 +1,10 @@
+| Team                    | Division   | City ( all in California )   | Stadium                           | Stadium capacity   | Affiliate            |
+|:------------------------|:-----------|:-----------------------------|:----------------------------------|:-------------------|:---------------------|
+| Inland Empire 66ers     | South      | San Bernardino               | San Manuel Stadium                | 5,000              | Los Angeles Angels   |
+| Lake Elsinore Storm     | South      | Lake Elsinore                | Lake Elsinore Diamond             | 7,866              | San Diego Padres     |
+| Lancaster JetHawks      | South      | Lancaster                    | Hangar ( Lancaster , California ) | 6,860              | Colorado Rockies     |
+| Modesto Nuts            | North      | Modesto                      | John Thurman Field                | 4,000              | Seattle Mariners     |
+| Rancho Cucamonga Quakes | South      | Rancho Cucamonga             | LoanMart Field                    | 6,200              | Los Angeles Dodgers  |
+| San Jose Giants         | North      | San Jose                     | Excite Ballpark                   | 4,200              | San Francisco Giants |
+| Stockton Ports          | North      | Stockton                     | Banner Island Ballpark            | 5,300              | Oakland Athletics    |
+| Visalia Rawhide         | North      | Visalia                      | Recreation Park                   | 2,468              | Arizona Diamondbacks |

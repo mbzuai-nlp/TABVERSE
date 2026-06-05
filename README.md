@@ -1,225 +1,168 @@
-# TABVERSE: Benchmarking Cross-Format Table Understanding in LLMs and VLMs
+<h1 align="center">TABVERSE</h1>
 
-A comprehensive benchmark for evaluating Large Language Models (LLMs) and Vision-Language Models (VLMs) on cross-format table images for Structural Understanding Capability (SUC), Question-Answering (QA), and Structure Reconstruction (SR) tasks.
+<p align="center">
+  <a href="https://mbzuai-nlp.github.io/TABVERSE/"><img src="https://img.shields.io/badge/Project-Website-1F6FEB?style=for-the-badge" alt="Project Website"></a>
+  <a href="docs/assets/dataset.pdf"><img src="https://img.shields.io/badge/%F0%9F%93%84-Paper-FFD21E?style=for-the-badge" alt="Paper"></a>
+  <img src="https://img.shields.io/badge/Q--Table%20Pairs-700-4C9A2A?style=for-the-badge" alt="Q-Table Pairs">
+  <img src="https://img.shields.io/badge/Formats-HTML%20%7C%20Markdown%20%7C%20LaTeX-0E7C3A?style=for-the-badge" alt="Formats">
+  <img src="https://img.shields.io/badge/Tasks-3-5A4FCF?style=for-the-badge" alt="Tasks">
+  <br>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-3776AB?style=flat-square" alt="License: MIT"></a>
+  <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python 3.10+">
+  <img src="https://img.shields.io/badge/Models%20Evaluated-17-orange?style=flat-square" alt="Models Evaluated">
+</p>
 
-## 🎯 Overview
+A controlled multimodal table benchmark for evaluating **LLMs and VLMs** on cross-format
+table understanding — **700 question–table pairs** (350 Easy, 350 Hard) from **629 unique tables**
+rendered across HTML, Markdown, and LaTeX, with aligned PNG images.
+Tasks span Structured Understanding & Comprehension (SUC), Question Answering (QA),
+and Structure Reconstruction (SR) across text and vision pipelines.
 
-TABVERSE evaluates models across multiple table formats (HTML, Markdown, LaTeX) and tasks including:
+## Dataset at a glance
 
-- **Structured Understanding and Comprehension (SUC)**: Cell value retrieval, row/column retrieval, table summarization
-- **Task Prediction**: Classification and reasoning over tabular data
-- **Format Generation**: Converting tables between different formats
+|                   |                                                                                           |
+| ----------------- | ----------------------------------------------------------------------------------------- |
+| Q–Table pairs     | 700 (350 Easy · 350 Hard)                                                                 |
+| Unique tables     | 629                                                                                       |
+| Formats           | HTML, Markdown, LaTeX (+ aligned PNG renderings)                                          |
+| Tasks             | SUC, QA (Task Prediction), SR (Format Generation)                                         |
+| Evaluation modes  | LLM (text), VLM-Image (vision), VLM-Text (text-only VLM)                                 |
+| Source datasets   | FEVEROUS, HybridQA, SQA, TabFact, ToTTo                                                   |
+| Models evaluated  | 17 (open-weight VLMs, open-weight LLMs, GPT-4o, Gemini)                                  |
 
-## 📊 Datasets
+Unlike generic table benchmarks, every table is held-out from five established TableQA datasets
+and converted into **three structural formats plus a rendered image** — allowing controlled
+comparison of how format and modality interact, with table content held fixed.
 
-TABVERSE provides a **cross-format multimodal dataset** that includes **tables represented in HTML, Markdown, and LaTeX**, along with their **corresponding rendered images**. Each table also includes the **source text files** in these formats to support both LLM and VLM evaluations.
+## How it's built
 
-- **Text formats**: `.html`, `.md`, `.tex`
-- **Rendered images**: Aligned PNG renderings for each format
-- **Coverage**: ~3.5K unique tables and 5K query–table pairs
-- **Sources**: FEVEROUS, HybridQA, SQA, TabFact, ToTTo
+The benchmark is produced by a multi-stage pipeline. Each stage reads from `data/<N>-<name>/`
+and writes the next — so any single transform can be re-run without disturbing the rest.
 
-These multimodal, cross-format representations enable consistent evaluation of models on **text**, **visual**, and **format conversion** tasks.
+| Phase              | Stages / Modules                          | What happens                                                                                                   |
+| ------------------ | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| **Collection**     | `data/1-raw/`                             | Load held-out splits from FEVEROUS, HybridQA, SQA, TabFact, ToTTo; store raw `.jsonl` per source              |
+| **Rendering**      | `src/renderers/`                          | Convert each table into HTML, Markdown, and LaTeX; render each format to an aligned PNG image                  |
+| **Tagging**        | `src/tagging/`, `data/2-task/`            | Annotate difficulty (Easy/Hard), assign task type (SUC / QA / SR); export per-task `.json` shards              |
+| **SUC processing** | `src/process_linerize.py`, `data/3-suc/`  | Build linearized representations for SUC sub-tasks (cell retrieval, row/column retrieval, summarization)       |
+| **Evaluation**     | `src/evaluation/`, `src/geneval.py`       | Score model outputs — exact match for SUC/QA; similarity + structural metrics for SR                           |
 
-## 🚀 Quick Start
+The final evaluation set is balanced: 350 Easy and 350 Hard pairs drawn from 629 unique tables.
 
-### 1. Setup Environment
+## Repository layout
+
+```
+TABVERSE/
+├── data/
+│   ├── 1-raw/                  # raw .jsonl per source dataset
+│   ├── 2-task/                 # task-annotated shards (.json)
+│   ├── 3-suc/                  # linearized SUC data (.json)
+│   └── evaluation/             # cached model outputs for scoring
+├── src/
+│   ├── renderers/              # table → HTML / Markdown / LaTeX / PNG
+│   ├── tagging/                # difficulty and task-type annotation
+│   ├── evaluation/             # scoring scripts (SUC, QA, SR)
+│   ├── utils/                  # shared helpers
+│   ├── vlm/                    # VLM evaluation (open-weight)
+│   ├── llm/                    # LLM evaluation (open-weight)
+│   ├── gpt/                    # GPT-4o evaluation
+│   ├── generation/             # SR (format generation) task logic
+│   ├── vlm.py                  # VLM pipeline entry point
+│   ├── llm.py                  # LLM pipeline entry point
+│   ├── gen.py                  # generation task entry point
+│   └── geneval.py              # generation scoring entry point
+├── docs/                       # project website (GitHub Pages)
+│   └── assets/                 # figures, PDFs, leaderboard data
+├── scripts/                    # slurm / local runner scripts
+├── results/                    # model output directories
+│   ├── vlmpipeline/            # VLM (image) results per model
+│   ├── llmpipeline/            # LLM (text) results per model
+│   └── vlmpipeline-text/       # VLM (text-only mode) results
+├── figures/                    # publication figures
+├── .env.template               # API key template
+├── requirements.txt            # Python dependencies
+└── setup.sh                    # environment setup
+```
+
+## Evaluation
+
+Each item is a single-answer question over a table rendered in one of three formats.
+Present the table (text or image) plus the question; compare the model's answer against
+the gold label. **Exact-match accuracy** is the primary metric for SUC and QA;
+structural similarity metrics are used for SR.
+
+**Open-weight VLMs** (image and text-only modes):
+
+```bash
+# Qwen-VL 2.5-3B — SUC task, 50 samples
+./scripts/run_qwen3b.sh 50 suc
+
+# Qwen-VL 2.5-7B — QA task, 100 samples
+./scripts/run_qwen7b.sh 100 task
+
+# SmolVLM 1.7B — SR task, 50 samples
+./scripts/run_smolvlm.sh 50 generation
+```
+
+**Open-weight LLMs** (text-only):
+
+```bash
+./scripts/run_llm_qwen_llm_2.5-3B-Instruct.sh
+./scripts/run_llm_qwen_llm_2.5-7B-Instruct.sh
+./scripts/run_llm_SmolLM2-1.7B-Instruct.sh
+```
+
+**API models** (GPT-4o, Gemini):
+
+```bash
+# set keys in .env, then:
+python src/vlm_gpt.py       # GPT-4o with images
+python src/vlm_gemini.py    # Gemini with images
+python src/vlm_gpt_text.py  # GPT-4o text-only
+```
+
+Results land in `results/<pipeline>/<model_name>/{suc,task,generation}/`.
+
+### Script parameters
+
+```bash
+./scripts/<script>.sh [max_samples] [task]
+```
+
+| Parameter    | Values                                           |
+| ------------ | ------------------------------------------------ |
+| `max_samples`| Number of pairs to evaluate (default: 1000)     |
+| `task`       | `suc` · `task` · `generation` · `text_only_vlm` · `all` |
+
+## Setup
 
 ```bash
 git clone https://github.com/mbzuai-nlp/TABVERSE.git
 cd TABVERSE
-chmod +x setup.sh
-./setup.sh
+chmod +x setup.sh && ./setup.sh      # installs dependencies
+cp .env.template .env                # then fill in your keys
 ```
 
-### 2. Configure API Keys
-
-Edit the `.env` file with your actual credentials:
+Required API keys in `.env`:
 
 ```bash
-nano .env
+HF_TOKEN=your_huggingface_token          # dataset access
+OPENROUTER_API_KEY=your_openrouter_key   # GPT models via OpenRouter
+OPENAI_API_KEY=your_openai_key           # optional: direct OpenAI
 ```
 
-Required environment variables:
+## License
 
-```bash
-# Hugging Face Token for dataset access
-HF_TOKEN=your_huggingface_token_here
+This project is licensed under the [MIT License](LICENSE).
 
-# OpenRouter API Key for GPT models
-OPENROUTER_API_KEY=your_openrouter_api_key_here
-
-# Optional: Direct OpenAI API Key
-OPENAI_API_KEY=your_openai_api_key_here
-```
-
-### 3. Run Evaluations
-
-#### VLM Models (Vision-Language Models)
-
-```bash
-# Qwen VLM 2.5-3B
-./src/scripts/run_qwen3b.sh 50 suc
-
-# Qwen VLM 2.5-7B
-./src/scripts/run_qwen7b.sh 100 task
-
-# SmolVLM 1.7B
-./src/scripts/run_smolvlm.sh 50 generation
-```
-
-#### LLM Models (Text-only)
-
-```bash
-# Qwen LLM 2.5-3B
-./src/scripts/run_llm_qwen_llm_2.5-3B-Instruct.sh
-
-# Qwen LLM 2.5-7B
-./src/scripts/run_llm_qwen_llm_2.5-7B-Instruct.sh
-
-# SmolLM2 1.7B
-./src/scripts/run_llm_SmolLM2-1.7B-Instruct.sh
-```
-
-## 📁 Repository Structure
-
-```
-TABVERSE/
-├── data/                          # Dataset files
-│   ├── 1-raw/                    # Raw dataset files (.jsonl)
-│   ├── 2-task/                   # Task-specific data (.json)
-│   ├── 3-suc/                    # SUC task data (.json)
-│   └── 4-generation_subset/      # Generation subset data
-├── src/
-│   ├── scripts/                  # Execution scripts
-│   ├── utils/                    # Utility functions
-│   └── zeroshot/                # Zero-shot evaluation code
-│       ├── gpt_*.py             # GPT model evaluations
-│       ├── vlm_*.py             # VLM model evaluations
-│       ├── llm_*.py             # LLM model evaluations
-│       └── generation*.py       # Format generation tasks
-├── results/                      # Output results
-│   ├── vlmpipeline/             # VLM results
-│   ├── llmpipeline/             # LLM results
-│   └── vlmpipeline-text/        # VLM text-only results
-├── .env.template                # Environment variables template
-├── requirements.txt             # Python dependencies
-└── setup.sh                    # Setup script
-```
-
-## 🔧 Usage Details
-
-### Script Parameters
-
-Most scripts accept the following parameters:
-
-```bash
-./src/scripts/script_name.sh [max_samples] [task]
-```
-
-- `max_samples`: Number of samples to evaluate (default: 1000)
-- `task`: Task type to run
-  - `suc`: Structured Understanding and Comprehension
-  - `task`: Task-specific prediction
-  - `generation`: Format generation
-  - `text_only_vlm`: VLM in text-only mode
-  - `all`: Run all available tasks
-
-### Available Tasks
-
-#### 1. Structured Understanding and Comprehension (SUC)
-
-- **Cell Value Retrieval**: Extract specific cell values by coordinates
-- **Column Retrieval**: Get column names by index
-- **Row Retrieval**: Extract entire row data
-- **Table Summarization**: Generate concise table summaries
-
-#### 2. Task Prediction
-
-- **Binary Classification**: True/false fact verification
-- **Multi-class Classification**: Category prediction
-- **Question Answering**: Answer questions about table content
-
-#### 3. Format Generation
-
-- **HTML ↔ Markdown**: Convert between HTML and Markdown formats
-- **HTML ↔ LaTeX**: Convert between HTML and LaTeX formats
-- **Markdown ↔ LaTeX**: Convert between Markdown and LaTeX formats
-
-## 📈 Results and Evaluation
-
-Results are automatically saved in structured directories:
-
-```
-results/
-├── vlmpipeline/
-│   └── model_name/
-│       ├── suc/              # SUC task results
-│       ├── task/             # Task prediction results
-│       └── generation/       # Generation results
-├── llmpipeline/
-│   └── model_name/
-│       └── ...
-└── vlmpipeline-text/
-    └── model_name/
-        └── ...
-```
-
-Each result file contains:
-
-- Model predictions
-- Ground truth labels
-- Evaluation metrics
-- Execution metadata
-
-## 🛠️ Development
-
-### Adding New Models
-
-1. Create evaluation script in `src/zeroshot/`
-2. Add model configuration
-3. Create runner script in `src/scripts/`
-4. Update documentation
-
-### Environment Variables
-
-The codebase uses `python-dotenv` for environment management:
-
-- All API keys are loaded from `.env` file
-- Command-line arguments can override environment variables
-- Supports multiple API providers (OpenRouter, OpenAI, etc.)
-
-### Dependencies
-
-Key dependencies include:
-
-- `openai`: API client for language models
-- `datasets`: Hugging Face datasets
-- `python-dotenv`: Environment variable management
-- `PIL`: Image processing for VLMs
-- `requests`: HTTP client for API calls
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📞 Support
-
-For questions or issues:
-
-- Open an issue on GitHub
-- Check existing documentation
-- Review the environment setup guide
-
-## 🏆 Citation
-
-If you use TABVERSE in your research, please cite:
+## Citation
 
 ```bibtex
-@misc{tabverse2024,
-  title={TABVERSE: Benchmarking Cross-Format Table Understanding in LLMs and VLMs},
-  author={Ahsan, Momina and Ahmad, Sarfraz and Hee, Ming Shan and Lee, Roy Ka-wei and Nakov, Preslav},
-  journal={},
-  year={2025},
+@misc{ahsan2025tabverse,
+  title   = {{TABVERSE}: Benchmarking Cross-Format Table Understanding in {LLMs} and {VLMs}},
+  author  = {Ahsan, Momina and Ahmad, Sarfraz and Hee, Ming Shan and
+             Lee, Roy Ka-Wei and Nakov, Preslav},
+  year    = {2025},
+  url     = {https://anonymous.for.review}
 }
 ```

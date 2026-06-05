@@ -1,0 +1,12 @@
+|   Rank | City                           | Passengers   |   Ranking | Airline                               |
+|-------:|:-------------------------------|:-------------|----------:|:--------------------------------------|
+|      1 | Quintana Roo, Cancun           | 132,046      |       nan | Aeromexico Connect, Interjet, Volaris |
+|      2 | Nuevo Leon, Monterrey          | 106,513      |       nan | Aeromexico Connect, Interjet          |
+|      3 | Guerrero, Acapulco             | 56,069       |       nan | Aeromexico Connect, Interjet          |
+|      4 | Jalisco, Guadalajara           | 52,584       |       nan | Aeromexico Connect, Volaris           |
+|      5 | Jalisco, Puerto Vallarta       | 43,419       |         1 | Interjet                              |
+|      6 | Baja California Sur, Los Cabos | 37,526       |         1 | Interjet                              |
+|      7 | Guerrero, Ixtapa/Zihuatanejo   | 35,507       |       nan | Interjet                              |
+|      8 | Baja California, Tijuana       | 14,906       |       nan | Interjet                              |
+|      9 | Tabasco, Villahermosa          | 6,928        |         1 | VivaAerobus                           |
+|     10 | Tamaulipas, Tampico            | 3,619        |         1 | VivaAerobus                           |

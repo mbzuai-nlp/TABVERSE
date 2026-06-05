@@ -1,0 +1,14 @@
+| Team                   | Stadium               | Capacity   |
+|:-----------------------|:----------------------|:-----------|
+| Albirex Niigata ( S )  | Jurong East Stadium   | 2,700      |
+| Balestier Khalsa       | Toa Payoh Stadium     | 3,900      |
+| Beijing Guoan Talent   | Yishun Stadium        | 3,400      |
+| Étoile                 | Queenstown Stadium    | 3,800      |
+| Geylang United         | Bedok Stadium         | 3,900      |
+| Gombak United          | Jurong West Stadium   | 3,200      |
+| Home United            | Clementi Stadium      | 4,000      |
+| Singapore Armed Forces | Choa Chu Kang Stadium | 4,600      |
+| Sengkang Punggol       | Hougang Stadium       | 2,500      |
+| Tampines Rovers        | Tampines Stadium      | 3,600      |
+| Woodlands Wellington   | Woodlands Stadium     | 4,300      |
+| Young Lions            | Jalan Besar Stadium   | 6,000      |

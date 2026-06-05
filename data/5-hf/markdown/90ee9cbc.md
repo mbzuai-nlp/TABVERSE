@@ -1,0 +1,14 @@
+| Name            | Club                 | Appointed         | Time as head coach   |
+|:----------------|:---------------------|:------------------|:---------------------|
+| Daryl Powell    | Castleford Tigers    | 7 May 2013        | 6 years , 276 days   |
+| Steve McNamara  | Catalans Dragons     | 19 June 2017      | 2 years , 233 days   |
+| Simon Woolford  | Huddersfield Giants  | 29 April 2018     | 1 year , 284 days    |
+| Lee Radford     | Hull                 | 25 September 2013 | 6 years , 135 days   |
+| Tony Smith      | Hull Kingston Rovers | 6 June 2019       | 246 days             |
+| Richard Agar    | Leeds Rhinos         | 7 May 2019        | 276 days             |
+| Ian Watson      | Salford Red Devils   | 3 September 2015  | 4 years , 157 days   |
+| Kristian Woolf  | St. Helens           | 13 October 2019   | 117 days             |
+| Brian McDermott | Toronto Wolfpack     | 12 November 2018  | 1 year , 87 days     |
+| Chris Chester   | Wakefield Trinity    | 16 March 2016     | 3 years , 328 days   |
+| Steve Price     | Warrington Wolves    | 6 October 2017    | 2 years , 124 days   |
+| Adrian Lam      | Wigan Warriors       | 14 October 2018   | 1 year , 116 days    |
