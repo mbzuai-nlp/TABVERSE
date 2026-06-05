@@ -1,5 +1,8 @@
 <p align="center">
-  <img src="assets/logo-light.png" alt="TABVERSE" width="280">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.png">
+    <img src="assets/logo-light.png" alt="TABVERSE" width="280">
+  </picture>
 </p>
 
 <h3 align="center">Benchmarking Cross-Format Table Understanding in LLMs and VLMs</h3>
