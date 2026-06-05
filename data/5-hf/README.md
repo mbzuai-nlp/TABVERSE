@@ -32,11 +32,10 @@ configs:
 
 <h3 align="center">Benchmarking Cross-Format Table Understanding in LLMs and VLMs</h3>
 
-<p align="center">
+<!-- <p align="center">
   <a href="https://mbzuai-nlp.github.io/TABVERSE/">🌐 Website</a> &nbsp;|&nbsp;
-  <a href="https://github.com/mbzuai-nlp/TABVERSE">💻 GitHub</a> &nbsp;|&nbsp;
-  <a href="https://huggingface.co/datasets/MBZUAI/TABVERSE">🤗 Dataset</a>
-</p>
+  <a href="https://github.com/mbzuai-nlp/TABVERSE">💻 GitHub</a>
+</p> -->
 
 <p align="center">
   <b>Momina Ahsan</b><sup>1</sup> &nbsp;·&nbsp;
@@ -47,7 +46,9 @@ configs:
 </p>
 
 <p align="center">
-  <sup>1</sup> Mohamed bin Zayed University of Artificial Intelligence (MBZUAI) &nbsp;·&nbsp;
+  <sup>1</sup> Mohamed bin Zayed University of Artificial Intelligence (MBZUAI)
+</p>
+<p align="center">
   <sup>2</sup> Singapore University of Technology and Design (SUTD)
 </p>
 
