@@ -34,11 +34,6 @@ configs:
 
 <h1 align="center">Benchmarking Cross-Format Table Understanding in LLMs and VLMs</h1>
 
-<!-- <p align="center">
-  <a href="https://mbzuai-nlp.github.io/TABVERSE/">🌐 Website</a> &nbsp;|&nbsp;
-  <a href="https://github.com/mbzuai-nlp/TABVERSE">💻 GitHub</a>
-</p> -->
-
 <p align="center">
   <b>Momina Ahsan</b><sup>1</sup> &nbsp;·&nbsp;
   <b>Sarfraz Ahmad</b><sup>1</sup> &nbsp;·&nbsp;
@@ -54,7 +49,11 @@ configs:
   <sup>2</sup> Singapore University of Technology and Design (SUTD)
 </p>
 
----
+<p align="center">
+  <a href="https://anonymous.for.review"><img src="https://img.shields.io/badge/Paper-arXiv-B31B1B?logo=arxiv&logoColor=white" alt="Paper"></a> &nbsp;|&nbsp;
+  <a href="https://mbzuai-nlp.github.io/TABVERSE/"><img src="https://img.shields.io/badge/Project-Website-1F6FEB?logo=googlechrome&logoColor=white" alt="Project Website"></a> &nbsp;|&nbsp;
+  <a href="https://github.com/mbzuai-nlp/TABVERSE"><img src="https://img.shields.io/badge/GitHub-Code-181717?logo=github&logoColor=white" alt="GitHub"></a>
+</p>
 
 A controlled multimodal table benchmark that aligns **HTML, Markdown, and LaTeX** table
 representations with rendered PNG images — enabling systematic evaluation of how format

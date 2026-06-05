@@ -7,7 +7,7 @@
 <p align="center">
   <a href="https://huggingface.co/datasets/MBZUAI/TABVERSE"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-FFD21E?style=for-the-badge" alt="Hugging Face Dataset"></a>
   <a href="https://mbzuai-nlp.github.io/TABVERSE/"><img src="https://img.shields.io/badge/Project-Website-1F6FEB?style=for-the-badge" alt="Project Website"></a>
-  <a href="docs/assets/dataset.pdf"><img src="https://img.shields.io/badge/%F0%9F%93%84-Paper-FFD21E?style=for-the-badge" alt="Paper"></a>
+  <a href="docs/assets/dataset.pdf"><img src="https://img.shields.io/badge/Paper-arXiv-B31B1B?style=for-the-badge&logo=arxiv&logoColor=white" alt="Paper"></a>
   <img src="https://img.shields.io/badge/Q--Table%20Pairs-700-4C9A2A?style=for-the-badge" alt="Q-Table Pairs">
   <img src="https://img.shields.io/badge/Formats-HTML%20%7C%20Markdown%20%7C%20LaTeX-0E7C3A?style=for-the-badge" alt="Formats">
   <img src="https://img.shields.io/badge/Tasks-3-5A4FCF?style=for-the-badge" alt="Tasks">
