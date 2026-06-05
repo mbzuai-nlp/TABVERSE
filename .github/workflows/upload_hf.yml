@@ -1,0 +1,91 @@
+name: Upload dataset to Hugging Face Hub
+
+on:
+  # Manual trigger with optional inputs
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: "HF dataset repo id (e.g. MBZUAI/TABVERSE)"
+        required: true
+        default: "MBZUAI/TABVERSE"
+      private:
+        description: "Upload as private repo? (true / false)"
+        required: false
+        default: "false"
+      data_dir:
+        description: "Path to the 5-hf data directory"
+        required: false
+        default: "data/5-hf"
+
+  # Optionally trigger automatically when 5-hf data changes on main
+  push:
+    branches: [main]
+    paths:
+      - "data/5-hf/**"
+      - "src/hf/build.py"
+
+jobs:
+  upload:
+    name: Build & push TABVERSE to HF Hub
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true          # pull any Git LFS assets
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install datasets huggingface_hub pillow
+
+      - name: Push dataset to Hugging Face Hub
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python src/hf/build.py \
+            --repo "${{ github.event.inputs.repo || 'MBZUAI/TABVERSE' }}" \
+            --data-dir "${{ github.event.inputs.data_dir || 'data/5-hf' }}" \
+            ${{ (github.event.inputs.private == 'true') && '--private' || '' }}
+
+      - name: Upload dataset card and raw source files from data/5-hf
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python - <<'EOF'
+          import os
+          from huggingface_hub import HfApi
+
+          api = HfApi(token=os.environ["HF_TOKEN"])
+          repo = "${{ github.event.inputs.repo || 'MBZUAI/TABVERSE' }}"
+          data_dir = "${{ github.event.inputs.data_dir || 'data/5-hf' }}"
+
+          # Upload data/5-hf/README.md as the dataset card at the repo root.
+          api.upload_file(
+              path_or_fileobj=f"{data_dir}/README.md",
+              path_in_repo="README.md",
+              repo_id=repo,
+              repo_type="dataset",
+              commit_message="Update dataset card",
+          )
+          print(f"Dataset card uploaded.")
+
+          # Upload all raw source files (JSON, images, code) under raw/ so
+          # users can also download the original assets directly.
+          api.upload_folder(
+              folder_path=data_dir,
+              path_in_repo="raw",
+              repo_id=repo,
+              repo_type="dataset",
+              ignore_patterns=["README.md"],   # card already at root
+              commit_message="Upload raw source files from data/5-hf",
+          )
+          print(f"Raw files uploaded to {repo}/raw/")
+          EOF
