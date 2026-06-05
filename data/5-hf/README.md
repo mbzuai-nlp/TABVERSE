@@ -28,11 +28,28 @@ configs:
         path: suc/test-*.parquet
 ---
 
-# TABVERSE: Benchmarking Cross-Format Table Understanding in LLMs and VLMs
+<h1 align="center">TABVERSE</h1>
 
-_Momina Ahsan¹ · Sarfraz Ahmad¹ · Ming Shan Hee¹ · Roy Ka-Wei Lee² · Preslav Nakov¹_
+<h3 align="center">Benchmarking Cross-Format Table Understanding in LLMs and VLMs</h3>
 
-¹ MBZUAI · ² SUTD
+<p align="center">
+  <a href="https://mbzuai-nlp.github.io/TABVERSE/">🌐 Website</a> &nbsp;|&nbsp;
+  <a href="https://github.com/mbzuai-nlp/TABVERSE">💻 GitHub</a> &nbsp;|&nbsp;
+  <a href="https://huggingface.co/datasets/MBZUAI/TABVERSE">🤗 Dataset</a>
+</p>
+
+<p align="center">
+  <b>Momina Ahsan</b><sup>1</sup> &nbsp;·&nbsp;
+  <b>Sarfraz Ahmad</b><sup>1</sup> &nbsp;·&nbsp;
+  <b>Ming Shan Hee</b><sup>1</sup> &nbsp;·&nbsp;
+  <b>Roy Ka-Wei Lee</b><sup>2</sup> &nbsp;·&nbsp;
+  <b>Preslav Nakov</b><sup>1</sup>
+</p>
+
+<p align="center">
+  <sup>1</sup> Mohamed bin Zayed University of Artificial Intelligence (MBZUAI) &nbsp;·&nbsp;
+  <sup>2</sup> Singapore University of Technology and Design (SUTD)
+</p>
 
 ---
 
