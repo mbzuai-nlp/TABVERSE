@@ -1,4 +1,8 @@
-<h1 align="center">TABVERSE: Benchmarking Cross-Format Table Understanding in LLMs and VLMs</h1>
+<p align="center">
+  <img src="assets/logo-light.png" alt="TABVERSE" width="180">
+</p>
+
+<h3 align="center">Benchmarking Cross-Format Table Understanding in LLMs and VLMs</h3>
 
 <p align="center">
   <a href="https://huggingface.co/datasets/MBZUAI/TABVERSE"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Dataset-FFD21E?style=for-the-badge" alt="Hugging Face Dataset"></a>
@@ -22,15 +26,15 @@ and Structure Reconstruction (SR) across text and vision pipelines.
 
 ## Dataset at a glance
 
-|                   |                                                                                           |
-| ----------------- | ----------------------------------------------------------------------------------------- |
-| Q–Table pairs     | 700 (350 Easy · 350 Hard)                                                                 |
-| Unique tables     | 629                                                                                       |
-| Formats           | HTML, Markdown, LaTeX (+ aligned PNG renderings)                                          |
-| Tasks             | SUC, QA (Task Prediction), SR (Format Generation)                                         |
-| Evaluation modes  | LLM (text), VLM-Image (vision), VLM-Text (text-only VLM)                                 |
-| Source datasets   | FEVEROUS, HybridQA, SQA, TabFact, ToTTo                                                   |
-| Models evaluated  | 17 (open-weight VLMs, open-weight LLMs, GPT-4o, Gemini)                                  |
+|                  |                                                          |
+| ---------------- | -------------------------------------------------------- |
+| Q–Table pairs    | 700 (350 Easy · 350 Hard)                                |
+| Unique tables    | 629                                                      |
+| Formats          | HTML, Markdown, LaTeX (+ aligned PNG renderings)         |
+| Tasks            | SUC, QA (Task Prediction), SR (Format Generation)        |
+| Evaluation modes | LLM (text), VLM-Image (vision), VLM-Text (text-only VLM) |
+| Source datasets  | FEVEROUS, HybridQA, SQA, TabFact, ToTTo                  |
+| Models evaluated | 17 (open-weight VLMs, open-weight LLMs, GPT-4o, Gemini)  |
 
 Unlike generic table benchmarks, every table is held-out from five established TableQA datasets
 and converted into **three structural formats plus a rendered image** — allowing controlled
@@ -71,13 +75,13 @@ for row in suc:
 The benchmark is produced by a multi-stage pipeline. Each stage reads from `data/<N>-<name>/`
 and writes the next — so any single transform can be re-run without disturbing the rest.
 
-| Phase              | Stages / Modules                          | What happens                                                                                                   |
-| ------------------ | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| **Collection**     | `data/1-raw/`                             | Load held-out splits from FEVEROUS, HybridQA, SQA, TabFact, ToTTo; store raw `.jsonl` per source              |
-| **Rendering**      | `src/renderers/`                          | Convert each table into HTML, Markdown, and LaTeX; render each format to an aligned PNG image                  |
-| **Tagging**        | `src/tagging/`, `data/2-task/`            | Annotate difficulty (Easy/Hard), assign task type (SUC / QA / SR); export per-task `.json` shards              |
-| **SUC processing** | `src/process_linerize.py`, `data/3-suc/`  | Build linearized representations for SUC sub-tasks (cell retrieval, row/column retrieval, summarization)       |
-| **Evaluation**     | `src/evaluation/`, `src/geneval.py`       | Score model outputs — exact match for SUC/QA; similarity + structural metrics for SR                           |
+| Phase              | Stages / Modules                         | What happens                                                                                             |
+| ------------------ | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Collection**     | `data/1-raw/`                            | Load held-out splits from FEVEROUS, HybridQA, SQA, TabFact, ToTTo; store raw `.jsonl` per source         |
+| **Rendering**      | `src/renderers/`                         | Convert each table into HTML, Markdown, and LaTeX; render each format to an aligned PNG image            |
+| **Tagging**        | `src/tagging/`, `data/2-task/`           | Annotate difficulty (Easy/Hard), assign task type (SUC / QA / SR); export per-task `.json` shards        |
+| **SUC processing** | `src/process_linerize.py`, `data/3-suc/` | Build linearized representations for SUC sub-tasks (cell retrieval, row/column retrieval, summarization) |
+| **Evaluation**     | `src/evaluation/`, `src/geneval.py`      | Score model outputs — exact match for SUC/QA; similarity + structural metrics for SR                     |
 
 The final evaluation set is balanced: 350 Easy and 350 Hard pairs drawn from 629 unique tables.
 
@@ -173,10 +177,10 @@ Results land in `results/<pipeline>/<model_name>/{suc,task,generation}/`.
 ./scripts/<script>.sh [max_samples] [task]
 ```
 
-| Parameter    | Values                                           |
-| ------------ | ------------------------------------------------ |
-| `max_samples`| Number of pairs to evaluate (default: 1000)     |
-| `task`       | `suc` · `task` · `generation` · `text_only_vlm` · `all` |
+| Parameter     | Values                                                  |
+| ------------- | ------------------------------------------------------- |
+| `max_samples` | Number of pairs to evaluate (default: 1000)             |
+| `task`        | `suc` · `task` · `generation` · `text_only_vlm` · `all` |
 
 ## Setup
 
@@ -202,11 +206,11 @@ that calls [`src/hf/build.py`](src/hf/build.py).
 
 **What gets uploaded (only from `data/5-hf/`):**
 
-| Destination in HF repo | Contents |
-|---|---|
-| Parquet files (`data/qa/`, `data/suc/`) | Images embedded as `Image()` features — enables Dataset Viewer |
-| `raw/` folder | Raw source files: `task.json`, `suc_generation.json`, `html/`, `markdown/`, `latex/` |
-| `README.md` | Dataset card from [`data/5-hf/README.md`](data/5-hf/README.md) |
+| Destination in HF repo                  | Contents                                                                             |
+| --------------------------------------- | ------------------------------------------------------------------------------------ |
+| Parquet files (`data/qa/`, `data/suc/`) | Images embedded as `Image()` features — enables Dataset Viewer                       |
+| `raw/` folder                           | Raw source files: `task.json`, `suc_generation.json`, `html/`, `markdown/`, `latex/` |
+| `README.md`                             | Dataset card from [`data/5-hf/README.md`](data/5-hf/README.md)                       |
 
 **To trigger manually** — go to Actions → "Upload dataset to Hugging Face Hub" → Run workflow.
 Set the `repo` input to your HF dataset id (e.g. `MBZUAI/TABVERSE`).

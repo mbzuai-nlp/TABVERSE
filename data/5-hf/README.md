@@ -28,6 +28,10 @@ configs:
         path: suc/test-*.parquet
 ---
 
+<p align="center">
+  <img src="https://huggingface.co/datasets/MBZUAI/TABVERSE/resolve/main/raw/assets/logo-light.png" alt="TABVERSE" width="180">
+</p>
+
 <h1 align="center">TABVERSE</h1>
 
 <h3 align="center">Benchmarking Cross-Format Table Understanding in LLMs and VLMs</h3>
