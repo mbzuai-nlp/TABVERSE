@@ -37,16 +37,33 @@ and converted into **three structural formats plus a rendered image** — allowi
 comparison of how format and modality interact, with table content held fixed.
 
 The released dataset is on the Hugging Face Hub at
-[`MBZUAI/TABVERSE`](https://huggingface.co/datasets/MBZUAI/TABVERSE):
+[`MBZUAI/TABVERSE`](https://huggingface.co/datasets/MBZUAI/TABVERSE).
+
+## Quickstart
 
 ```python
 from datasets import load_dataset
 
-# Task Prediction (QA) — 700 rows, images shown in Dataset Viewer
+# Task Prediction (QA) — shows images in Dataset Viewer
 qa = load_dataset("MBZUAI/TABVERSE", name="qa", split="test")
+print(qa[0]["query"])          # natural-language question
+qa[0]["html_image"]            # PIL Image of the HTML-rendered table
+qa[0]["html_code"]             # raw HTML source
 
-# SUC + Format Generation — 629 rows (one per unique table)
+# SUC / Format Generation
 suc = load_dataset("MBZUAI/TABVERSE", name="suc", split="test")
+print(suc[0]["size_detection"])   # e.g. "118|9"
+print(suc[0]["cell_value"])       # gold cell value
+suc[0]["markdown_image"]          # PIL Image of the Markdown-rendered table
+```
+
+**Format generation (SR) with the `suc` config:**
+
+```python
+# HTML → Markdown generation
+for row in suc:
+    source = row["html_code"]     # input
+    target = row["markdown_code"] # generation target
 ```
 
 ## How it's built
