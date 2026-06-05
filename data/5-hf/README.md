@@ -29,7 +29,7 @@ configs:
 ---
 
 <p align="center">
-  <img src="https://huggingface.co/datasets/MBZUAI/TABVERSE/resolve/main/raw/assets/logo-light.png" alt="TABVERSE" width="180">
+  <img src="https://huggingface.co/datasets/MBZUAI/TABVERSE/resolve/main/raw/assets/logo-light.png" alt="TABVERSE" width="280">
 </p>
 
 <h1 align="center">Benchmarking Cross-Format Table Understanding in LLMs and VLMs</h1>
