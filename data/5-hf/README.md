@@ -50,8 +50,8 @@ configs:
 </p>
 
 <p align="center">
-  <a href="https://anonymous.for.review"><img src="https://img.shields.io/badge/Paper-arXiv-B31B1B?logo=arxiv&logoColor=white" alt="Paper"></a> &nbsp;|&nbsp;
-  <a href="https://mbzuai-nlp.github.io/TABVERSE/"><img src="https://img.shields.io/badge/Project-Website-1F6FEB?logo=googlechrome&logoColor=white" alt="Project Website"></a> &nbsp;|&nbsp;
+  <a href="https://anonymous.for.review"><img src="https://img.shields.io/badge/Paper-arXiv-B31B1B?logo=arxiv&logoColor=white" alt="Paper"></a>
+  <a href="https://mbzuai-nlp.github.io/TABVERSE/"><img src="https://img.shields.io/badge/Project-Website-1F6FEB?logo=googlechrome&logoColor=white" alt="Project Website"></a>
   <a href="https://github.com/mbzuai-nlp/TABVERSE"><img src="https://img.shields.io/badge/GitHub-Code-181717?logo=github&logoColor=white" alt="GitHub"></a>
 </p>
 
