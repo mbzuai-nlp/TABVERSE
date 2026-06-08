@@ -21,6 +21,21 @@
   <img src="https://img.shields.io/badge/Models%20Evaluated-17-orange?style=flat-square" alt="Models Evaluated">
 </p>
 
+## Table of Contents
+
+- [TL;DR](#tldr)
+- [Dataset at a glance](#dataset-at-a-glance)
+- [Quickstart](#quickstart)
+- [How it's built](#how-its-built)
+- [Repository layout](#repository-layout)
+- [Evaluation](#evaluation)
+- [Setup](#setup)
+- [Uploading to Hugging Face](#uploading-to-hugging-face)
+- [License](#license)
+- [Citation](#citation)
+
+## TL;DR
+
 A controlled multimodal table benchmark for evaluating **LLMs and VLMs** on cross-format
 table understanding — **700 question–table pairs** (350 Easy, 350 Hard) from **629 unique tables**
 rendered across HTML, Markdown, and LaTeX, with aligned PNG images.
