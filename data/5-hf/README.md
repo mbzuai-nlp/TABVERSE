@@ -50,7 +50,7 @@ configs:
 </p>
 
 <p align="center">
-  <a href="https://anonymous.for.review"><img src="https://img.shields.io/badge/Paper-arXiv-B31B1B?logo=arxiv&logoColor=white" alt="Paper"></a>
+  <a href="https://arxiv.org/abs/2606.09578"><img src="https://img.shields.io/badge/Paper-arXiv-B31B1B?logo=arxiv&logoColor=white" alt="Paper"></a>
   <a href="https://mbzuai-nlp.github.io/TABVERSE/"><img src="https://img.shields.io/badge/Project-Website-1F6FEB?logo=googlechrome&logoColor=white" alt="Project Website"></a>
   <a href="https://github.com/mbzuai-nlp/TABVERSE"><img src="https://img.shields.io/badge/GitHub-Code-181717?logo=github&logoColor=white" alt="GitHub"></a>
 </p>
@@ -224,11 +224,13 @@ All tables come from held-out splits to prevent contamination.
 ## Citation
 
 ```bibtex
-@misc{ahsan2025tabverse,
-  title   = {{TABVERSE}: Benchmarking Cross-Format Table Understanding in {LLMs} and {VLMs}},
-  author  = {Ahsan, Momina and Ahmad, Sarfraz and Hee, Ming Shan and
-             Lee, Roy Ka-Wei and Nakov, Preslav},
-  year    = {2025},
-  url     = {https://huggingface.co/datasets/MBZUAI/TABVERSE}
+@misc{ahsan2026tabversebenchmarkingcrossformattable,
+      title={TABVERSE: Benchmarking Cross-Format Table Understanding in LLMs and VLMs},
+      author={Momina Ahsan and Sarfraz Ahmad and Ming Shan Hee and Roy Ka-Wei Lee and Preslav Nakov},
+      year={2026},
+      eprint={2606.09578},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2606.09578},
 }
 ```
